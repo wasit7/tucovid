@@ -1,0 +1,21 @@
+{% extends 'base.html' %} {% load static %} {% block body %}
+<div class="centered-container">
+  <div class="card">
+    <div class="card-logo is-center">
+      <img
+        src="{% static 'Thammasat_main_logo.png' %}"
+        alt=""
+        class="login-logo"
+      />
+    </div>
+    <h4 class="card-title is-center">เข้าสู่ระบบ</h4>
+    <p class="card-subtitle is-center">เพื่อใช้งานระบบ TU Covid</p>
+    <a class="button tu-button is-fullwidth" href="{% url 'social:begin' 'tu' %}">
+      เข้าสู่ระบบด้วยรหัสธรรมศาสตร์
+    </a>
+    <span class="card-helper">
+      สำหรับข้อมูลเกี่ยวกับระบบเพิ่มเติม กรุณากดที่ <a href="">ลิ้งก์</a>
+    </span>
+  </div>
+</div>
+{% endblock %}
