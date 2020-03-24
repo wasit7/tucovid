@@ -1,0 +1,19 @@
+version: '3.3'
+
+services:
+  db:
+    image: postgres:12.2-alpine
+    env_file:
+      - .env.development
+
+  web:
+    build: ./tucovid
+    command: sh /tucovid/runserver.sh
+    volumes:
+      - ./tucovid:/tucovid
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+      - .env.development
