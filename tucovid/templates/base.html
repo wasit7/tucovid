@@ -2,7 +2,10 @@
 <html>
   <head>
     <title>TU Covid</title>
-    <link rel="shortcut icon" href="{% static 'Thammasat_main_logo' %}">
+    <link rel="shortcut icon" href="{% static 'Thammasat_main_logo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block extra_css %}
+    {% endblock extra_css %}
   </head>
   <body>
     {% block body %}
