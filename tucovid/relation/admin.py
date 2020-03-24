@@ -1,5 +1,5 @@
 from django.contrib import admin
-from relation.models import Relationship
+from relation.models import Relationship, Event
 
 @admin.register(Relationship)
 class RelationshipAdmin(admin.ModelAdmin):
@@ -17,3 +17,15 @@ class RelationshipAdmin(admin.ModelAdmin):
     
     def second_person(self, obj):
         return obj.persons.last()
+
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    list_display = [
+        'title',
+        'start',
+        'finish',
+        'localtion',
+        'reporter',
+        'created_date',
+        'created_by',
+    ]
