@@ -141,7 +141,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
-
 SOCIAL_AUTH_TU_KEY = os.environ.get('TU_AUTH_KEY', None)
 SOCIAL_AUTH_TU_SECRET = os.environ.get('TU_AUTH_SECRET', None)
+
+STATIC_URL = '/static/'
+STATIC_ROOT = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
