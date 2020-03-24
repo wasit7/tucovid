@@ -14,7 +14,7 @@ class Relationship(models.Model):
     persons = models.ManyToManyField(User, related_name='relationship')
     level = models.CharField(max_length=2, choices=RELATION_LEVELS)
     created_date = models.DateTimeField(auto_now=True)
-    created_by = models.ForeignKey(User, on_delete=models.PROTECT, related_name='relation_reporter')
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT, related_name='relation_creator')
 
     def __str__(self):
         return 'Relationships of {} and {} is {}'.format(
