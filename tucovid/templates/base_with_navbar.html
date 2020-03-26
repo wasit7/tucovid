@@ -1,0 +1,30 @@
+{% load static %}
+<html>
+  <head>
+    <title>TU Covid</title>
+    <link rel="shortcut icon" href="{% static 'Thammasat_main_logo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    {% block extra_css %}
+    {% endblock extra_css %}
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="navbar-logo">
+        <img src="{% static 'Thammasat_main_logo.png' %}" class="logo" alt="TU Covid logo">
+      </div>
+      <div class="menu-start">
+        <a href="" class="menu-item">เพิ่มรายการคนสนิท</a>
+        <a href="" class="menu-item">เพิ่มกิจกรรมที่เข้าร่วม</a>
+      </div>
+      <div class="menu-end">
+        <a href="" class="menu-item">ข้อมูลส่วนตัว</a>
+        <a href="" class="menu-item">ออกจากระบบ</a>
+      </div>
+    </div>
+    {% block body %}
+    {% endblock body %}
+  </body>
+</html>
