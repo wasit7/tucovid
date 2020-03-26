@@ -3,6 +3,13 @@
   color: #fafafa;
 }
 
+.is-primary:disabled,
+.is-primary:hover:disabled {
+  color: #707070;
+  background: #ffffff;
+  cursor: default;
+}
+
 .is-primary:hover {
   color: #e7e7e7;
   background-color: #d3103f;

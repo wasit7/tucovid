@@ -22,6 +22,7 @@ body {
   justify-content: center;
   align-items: center;
   margin-top: 2rem;
+  flex-direction: column;
 }
 
 .card {
@@ -74,10 +75,93 @@ body {
   margin-bottom: 0.75rem;
 }
 
+.medium-padding {
+  padding: 1.75rem;
+}
+
+.small-padding {
+  padding: 1rem;
+}
+
+.margin-top {
+  margin-top: 1.5rem;
+}
+
 .remove-margin {
   margin: 0;
 }
 
 .button + .button {
   margin-left: 1rem;
+}
+
+.content {
+  min-width: 1160px;
+  text-align: left;
+}
+
+.title-block {
+  font-size: 2rem;
+}
+
+.columns {
+  margin-top: 2rem;
+  display: flex;
+}
+
+.column + .column {
+  margin-left: 1rem;
+}
+
+.column.is-3 {
+  width: 60%;
+}
+
+.column.is-2 {
+  width: 40%;
+}
+
+.remove-min-width {
+  min-width: auto;
+}
+
+.suggestion-title {
+  font-size: 1.5rem;
+  color: #848484;
+  font-weight: normal;
+  margin: 0;
+}
+
+.suggestions {
+  margin-top: 1rem;
+}
+
+.suggestion + .suggestion {
+  margin-top: 1rem;
+}
+
+.phone-no {
+  color: #848484;
+  font-size: 0.875rem;
+}
+
+.helper {
+  color: #bdbdbd;
+}
+
+.suggestion {
+  cursor: pointer;
+}
+
+.suggestion:hover > .suggestion-title,
+.suggestion:hover > .phone-no {
+  color: #d3103f;
+}
+
+.card + .card {
+  margin-top: 1.5rem;
+}
+
+.friend {
+  flex-grow: 1;
 }

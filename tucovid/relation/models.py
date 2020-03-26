@@ -1,19 +1,19 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+VERY_CLOSED = '01'
+HAVE_DISTANCE = '02'
+CLOSED = '03'
+ROOM_MATE = '04'
+
+RELATION_LEVELS = [
+    (VERY_CLOSED, 'สามี/ภรรยา'),
+    (HAVE_DISTANCE, 'เพื่อนร่วมงาน/เพื่อนร่วมชั้น'),
+    (CLOSED, ' เพื่อนสนิท/คนรัก'),
+    (ROOM_MATE, 'เพื่อนร่วมห้อง'),
+]
+
 class Relationship(models.Model):
-    VERY_CLOSED = '01'
-    HAVE_DISTANCE = '02'
-    CLOSED = '03'
-    ROOM_MATE = '04'
-
-    RELATION_LEVELS = [
-        (VERY_CLOSED, 'สามี/ภรรยา'),
-        (HAVE_DISTANCE, 'เพื่อนร่วมงาน/เพื่อนร่วมชั้น'),
-        (CLOSED, ' เพื่อนสนิท/คนรัก'),
-        (ROOM_MATE, 'เพื่อนร่วมห้อง'),
-    ]
-
     # required exactly 2 persons.
     persons = models.ManyToManyField(User, related_name='relationship')
     level = models.CharField(max_length=2, choices=RELATION_LEVELS)
