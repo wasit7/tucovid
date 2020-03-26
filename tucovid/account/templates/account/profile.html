@@ -1,0 +1,62 @@
+{% extends 'base_with_navbar.html' %} {% load static %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}" />
+{% endblock %} {% block body %}
+<div class="container">
+  <div class="card">
+    <h4 class="card-title remove-margin">
+      ข้อมูลส่วนตัวของ {{ request.user }}
+    </h4>
+
+    <form action="" method="POST" class="remove-margin">
+      {% csrf_token %}
+      <div class="field">
+        <label for="full_name" class="label">ชื่อ นามสกุล*</label>
+        <input
+          type="text"
+          class="input is-fullwidth"
+          id="full_name"
+          name="full_name"
+          required
+          placeholder="ชื่อ นามสกุล*"
+          {% if profile %}value="{{ profile.full_name }}"{% endif %}
+        />
+      </div>
+
+      <div class="field">
+        <label for="nickname" class="label">ชื่อเล่น*</label>
+        <input
+          type="text"
+          class="input is-fullwidth"
+          id="nickname"
+          name="nickname"
+          required
+          placeholder="ชื่อเล่น"
+          {% if profile %}value="{{ profile.extra_attribute.nickname }}"{% endif %}
+        />
+      </div>
+
+      <div class="field">
+        <label for="phone_no" class="label">เบอร์โทรศัพท์*</label>
+        <input
+          type="text"
+          class="input is-fullwidth"
+          id="phone_no"
+          name="phone_no"
+          required
+          placeholder="เบอร์โทรศัพท์ที่สามารถติดต่อได้"
+          {% if profile %}value="{{ profile.phone_no }}"{% endif %}
+        />
+      </div>
+
+      <div class="submit-button-group">
+        <button class="button is-primary" type="submit">
+          บันทึกการเปลี่ยนแปลง
+        </button>
+        <button class="button is-cancel" type="reset">
+          ยกเลิก
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

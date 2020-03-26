@@ -150,3 +150,5 @@ STATIC_ROOT = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+# SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'account:profile' # redirect to index page
