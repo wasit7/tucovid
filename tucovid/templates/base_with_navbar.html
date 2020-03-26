@@ -16,11 +16,16 @@
         <img src="{% static 'Thammasat_main_logo.png' %}" class="logo" alt="TU Covid logo">
       </div>
       <div class="menu-start">
-        <a href="" class="menu-item">เพิ่มรายการคนสนิท</a>
-        <a href="" class="menu-item">เพิ่มกิจกรรมที่เข้าร่วม</a>
+        {% if request.user.profile %}
+          <a href="" class="menu-item">เพิ่มรายการคนสนิท</a>
+          <a href="" class="menu-item">เพิ่มกิจกรรมที่เข้าร่วม</a>
+        {% endif %}
       </div>
       <div class="menu-end">
-        <a href="" class="menu-item">ข้อมูลส่วนตัว</a>
+        {% if request.user.profile %}
+          <a href="" class="menu-item">ข้อมูลส่วนตัว</a>
+        {% endif %}
+
         <a href="{% url 'account:logout' %}" class="menu-item">ออกจากระบบ</a>
       </div>
     </div>
