@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 from django.views.decorators.http import require_GET, require_http_methods
 from account.decorators import is_anonymous
 from account.profile import get_profile_if_exists, update_or_create_profile
@@ -28,3 +29,10 @@ def profile_page(request):
         else:
             context['profile'] = profile
             return render(request, 'account/profile.html', context=context)
+
+@require_GET
+@login_required
+def logout_view(request):
+    logout(request)
+
+    return redirect('relation:index')

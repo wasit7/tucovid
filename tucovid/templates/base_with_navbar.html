@@ -21,7 +21,7 @@
       </div>
       <div class="menu-end">
         <a href="" class="menu-item">ข้อมูลส่วนตัว</a>
-        <a href="" class="menu-item">ออกจากระบบ</a>
+        <a href="{% url 'account:logout' %}" class="menu-item">ออกจากระบบ</a>
       </div>
     </div>
     {% block body %}
