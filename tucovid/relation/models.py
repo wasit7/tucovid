@@ -2,12 +2,16 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Relationship(models.Model):
-    FAMILY_RELATION = 'FR'
-    CLOSE_FRIEND_RELATION = 'CR'
+    VERY_CLOSED = '01'
+    HAVE_DISTANCE = '02'
+    CLOSED = '03'
+    ROOM_MATE = '04'
 
     RELATION_LEVELS = [
-        (FAMILY_RELATION, 'Family'),
-        (CLOSE_FRIEND_RELATION, 'Close friend'),
+        (VERY_CLOSED, 'สามี/ภรรยา'),
+        (HAVE_DISTANCE, 'เพื่อนร่วมงาน/เพื่อนร่วมชั้น'),
+        (CLOSED, ' เพื่อนสนิท/คนรัก'),
+        (ROOM_MATE, 'เพื่อนร่วมห้อง'),
     ]
 
     # required exactly 2 persons.
