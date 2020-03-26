@@ -1,4 +1,6 @@
 from account.models import Profile
+from django.db.models import Q
+from relation.models import Relationship
 
 def get_profile_if_exists(user):
     profile = Profile.objects.filter(user=user)
@@ -20,3 +22,11 @@ def update_or_create_profile(user, profile_data):
     profile.save()
 
     return profile, is_created
+
+def search_profile(keyword):
+    profiles = Profile.objects.filter(
+        Q(full_name__icontains=keyword) |
+        Q(phone_no__icontains=keyword)
+    )
+
+    return profiles
