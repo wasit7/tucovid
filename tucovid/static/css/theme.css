@@ -1,11 +1,16 @@
-.tu-button {
+.is-primary {
   background-color: #c3002f;
   color: #fafafa;
 }
 
-.tu-button:hover {
+.is-primary:hover {
   color: #e7e7e7;
   background-color: #d3103f;
+}
+
+.is-cancel {
+  color: #707070;
+  background: #ffffff;
 }
 
 .tu-button:before {

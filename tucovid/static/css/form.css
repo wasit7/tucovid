@@ -1,0 +1,33 @@
+.field {
+  margin-top: 1.5rem;
+}
+
+.label {
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.input {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  outline: 0;
+  border: 1px solid #dbdbdb;
+}
+
+.input:hover {
+  border: 1px solid #bdbdbd;
+}
+
+.input:focus {
+  border: 1px solid #3273dc;
+  box-shadow: 0 0 0 0.125rem rgba(50, 115, 220, .25);
+}
+
+.input::placeholder {
+  color: #dbdbdb;
+  font-style: italic;
+}
+
+.submit-button-group {
+  margin-top: 1.5rem;
+}
