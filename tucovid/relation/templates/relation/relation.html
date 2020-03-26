@@ -232,6 +232,7 @@
 
   const createTitleBlock = text => {
     const title = document.createElement("p");
+    title.classList.add("remove-margin");
     title.innerHTML = text;
 
     const titleBlock = document.createElement("div");

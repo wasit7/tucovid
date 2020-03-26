@@ -21,7 +21,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 2rem;
   flex-direction: column;
 }
 
@@ -102,6 +101,7 @@ body {
 
 .title-block {
   font-size: 2rem;
+  margin: 1.5rem 0;
 }
 
 .columns {
@@ -160,6 +160,10 @@ body {
 
 .card + .card {
   margin-top: 1.5rem;
+}
+
+.card.small-padding + .card.small-padding {
+  margin-top: 1rem;
 }
 
 .friend {
