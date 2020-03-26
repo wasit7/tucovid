@@ -24,7 +24,7 @@ def profile_page(request):
         profile, is_created = update_or_create_profile(request.user, request.POST)
 
         if is_created:
-            return redirect('index page') # index page
+            return redirect('relation:index')
 
         else:
             context['profile'] = profile
