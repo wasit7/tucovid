@@ -19,4 +19,4 @@ def event_history(request, user_id):
     if request.user.is_staff or user_id == request.user.id:
         event_history = get_event_history(user_id)
 
-    return JsonResponse(data=relation_history, status=200, safe=False)
+    return JsonResponse(data=event_history, status=200, safe=False)
