@@ -113,11 +113,11 @@ body {
   margin-left: 1rem;
 }
 
-.column.is-3 {
+.column.is-3-5 {
   width: 60%;
 }
 
-.column.is-2 {
+.column.is-2-5 {
   width: 40%;
 }
 
