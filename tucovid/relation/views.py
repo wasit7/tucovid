@@ -32,3 +32,9 @@ def relation_page(request):
         relation = create_relation_record(request.user, body)
 
         return JsonResponse(data=relation, status=200)
+
+@require_http_methods(['GET', 'POST'])
+@login_required
+def event_page(request):
+
+    return render(request, 'relation/event.html')

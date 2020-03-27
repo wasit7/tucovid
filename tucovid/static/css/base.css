@@ -170,7 +170,8 @@ body {
   margin-top: 1rem;
 }
 
-.friend {
+.friend,
+.event-detail {
   flex-grow: 1;
 }
 
@@ -179,4 +180,18 @@ body {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr)) auto repeat(2, minmax(0, 1fr));
   grid-column-gap: 0.5rem;
+}
+
+.icon-button {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  font-size: 1.25rem;
+  color: #848484;
+  cursor: pointer;
+}
+
+.event-title {
+  font-size: 1.5rem;
+  color: #d3103f;
 }

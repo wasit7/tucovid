@@ -47,7 +47,7 @@ input[type="text"]:hover::placeholder,
 }
 
 .inline-field + .inline-field {
-  margin-top: 1rem;
+  margin-top: 0.75rem;
 }
 
 .inline-input {
@@ -111,4 +111,21 @@ input[type="text"]:hover::placeholder,
   border-bottom: 1px solid #dbdbdb;
   flex-grow: 1;
   resize: none;
+}
+
+.participants {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.participant {
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.participant > .title {
+  flex-grow: 1;
 }
