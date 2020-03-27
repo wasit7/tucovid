@@ -17,13 +17,13 @@
       </div>
       <div class="menu-start">
         {% if request.user.profile %}
-          <a href="" class="menu-item">เพิ่มรายการคนสนิท</a>
+          <a href="{% url 'relation:relation_page' %}" class="menu-item">เพิ่มรายการคนสนิท</a>
           <a href="" class="menu-item">เพิ่มกิจกรรมที่เข้าร่วม</a>
         {% endif %}
       </div>
       <div class="menu-end">
         {% if request.user.profile %}
-          <a href="" class="menu-item">ข้อมูลส่วนตัว</a>
+          <a href="{% url 'account:profile_page' %}" class="menu-item">ข้อมูลส่วนตัว</a>
         {% endif %}
 
         <a href="{% url 'account:logout' %}" class="menu-item">ออกจากระบบ</a>

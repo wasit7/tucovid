@@ -24,3 +24,10 @@ def create_relation_record(user, data):
         created_by=user
     )
     relation.persons.set(users)
+
+    return {
+        'id': relation.pk,
+        'person': users.first().profile.full_name,
+        'other_person': users.last().profile.full_name,
+        'level': relation.get_level_display()
+    }
