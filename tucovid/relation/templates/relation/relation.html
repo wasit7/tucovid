@@ -119,7 +119,10 @@
               @click="selectSuggestion(suggestion)"
             >
               <h4 class="suggestion-title">${ suggestion.full_name }</h4>
-              <span class="phone-no">${ suggestion.phone_no }</span>
+              <span class="phone-no">
+                ${ suggestion.phone_no }
+                <a @click.stop :href="`/account/profile/${ suggestion.id }`" target="_blank">ข้อมูลเพิ่มเติม</a>
+              </span>
             </div>
           </div>
         </div>

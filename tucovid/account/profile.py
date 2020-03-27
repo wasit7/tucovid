@@ -1,6 +1,10 @@
-from account.models import Profile
+from django.contrib.auth.models import User
 from django.db.models import Q
+from account.models import Profile
 from relation.models import Relationship
+
+def get_user_by_id(user_id):
+    return User.objects.get(id=user_id)
 
 def get_profile_if_exists(user):
     profile = Profile.objects.filter(user=user)
@@ -22,6 +26,16 @@ def update_or_create_profile(user, profile_data):
     profile.save()
 
     return profile, is_created
+
+def update_profile(profile, new_data):
+    profile.full_name = new_data['full_name']
+    profile.phone_no = new_data['phone_no']
+    profile.extra_attribute = {
+        'nickname': new_data['nickname']
+    }
+    profile.save()
+
+    return profile
 
 def search_profile(keyword):
     profiles = Profile.objects.filter(

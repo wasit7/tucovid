@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.views.decorators.http import require_GET, require_http_methods
 from account.decorators import is_anonymous
-from account.profile import get_profile_if_exists, update_or_create_profile
+from account.profile import get_profile_if_exists, update_or_create_profile, update_profile, get_user_by_id
 
 @require_GET
 @is_anonymous
@@ -16,7 +16,7 @@ def profile_page(request):
     context = dict()
 
     if request.method == 'GET':
-        context['profile'] = profile = get_profile_if_exists(request.user)
+        context['profile'] = get_profile_if_exists(request.user)
 
         return render(request, 'account/profile.html', context=context)
 
@@ -29,6 +29,22 @@ def profile_page(request):
         else:
             context['profile'] = profile
             return render(request, 'account/profile.html', context=context)
+
+@require_http_methods(['GET', 'POST'])
+@login_required
+def profile_page_by_id(request, user_id):
+    try:
+        user = get_user_by_id(user_id)
+        context = dict()
+        context['profile'] = profile = get_profile_if_exists(user)
+
+        if request.method == 'POST' and request.user.is_staff:
+                profile = update_profile(profile, request.POST)
+
+        return render(request, 'account/profile.html', context=context)
+
+    except:
+        return redirect('relation:index')
 
 @require_GET
 @login_required
