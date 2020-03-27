@@ -9,12 +9,15 @@ def search_profile_api(request):
     body = request.body
     body = json.loads(body)
     keyword = body['keyword']
-    reporter_id = int(body['reporter_id'])
 
     profiles = search_profile(keyword)
     response = []
 
-    for profile in profiles.exclude(pk=reporter_id):
+    if body['reporter_id']:
+        reporter_id = int(body['reporter_id'])
+        profiles = profiles.exclude(pk=reporter_id)
+
+    for profile in profiles:
         if not Relationship.objects.filter(persons__pk=reporter_id).filter(persons__pk=profile.user.pk).exists():
             response.append({
                 'id': profile.user.pk,
