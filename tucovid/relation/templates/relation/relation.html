@@ -187,6 +187,7 @@
       async activePeopleSearchingFor(target) {
         this.peopleSearchingTarget = target;
         this.isPeopleSearchingActive = true;
+        this.clearSuggestions();
         const peopleSearching = await document.querySelector(
           "#people_searching"
         );
