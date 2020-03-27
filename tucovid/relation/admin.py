@@ -24,7 +24,7 @@ class EventAdmin(admin.ModelAdmin):
         'title',
         'start',
         'finish',
-        'localtion',
+        'location',
         'reporter',
         'created_date',
         'created_by',
