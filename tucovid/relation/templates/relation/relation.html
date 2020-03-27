@@ -8,6 +8,7 @@
     </div>
     <div class="columns">
       <div class="column is-3">
+        {% if request.user.is_staff %}
         <div class="card medium-padding">
           <div class="inline-field">
             <p class="remove-margin">
@@ -22,6 +23,7 @@
             </button>
           </div>
         </div>
+        {% endif %}
 
         <div class="card medium-padding">
           <p class="card-subtitle remove-margin">
@@ -164,12 +166,20 @@
     computed: {
       isSubmitButtonActive() {
         return this.reporter.id && this.friend.id && this.relationLevel;
+      },
+      isStaff() {
+        return "{{ request.user.is_staff }}" == "True";
       }
     },
     methods: {
       initReporter() {
-        this.reporter.name = localStorage.getItem("reportName");
-        this.reporter.id = localStorage.getItem("reportID");
+        if (this.isStaff) {
+          this.reporter.name = localStorage.getItem("reportName");
+          this.reporter.id = localStorage.getItem("reportID");
+        } else {
+          this.reporter.name = "{{ request.user.profile.full_name }}";
+          this.reporter.id = "{{ request.user.pk }}";
+        }
       },
       async activePeopleSearchingFor(target) {
         this.peopleSearchingTarget = target;
@@ -182,7 +192,7 @@
       async searchPeople(keyword) {
         const response = await axios.post("/account/search/", {
           keyword,
-          reporter_id: this.reporter.id
+          reporter_id: this.reporter.id == this.peopleSearchingTarget.id ? null : this.reporter.id
         });
 
         return response;
