@@ -17,7 +17,7 @@ def search_relation_profile_api(request):
 
     if body['reporter_id']:
         reporter_id = int(body['reporter_id'])
-        profiles = profiles.exclude(pk=reporter_id)
+        profiles = profiles.exclude(user__pk=reporter_id)
 
     for profile in profiles:
         if not Relationship.objects.filter(persons__pk=reporter_id).filter(persons__pk=profile.user.pk).exists():
