@@ -43,6 +43,7 @@ def get_event_history(user_id):
 
     events = [
         {
+            'id': event.pk,
             'title': event.title,
             'reporter': {
                 'name': event.reporter.profile.full_name
