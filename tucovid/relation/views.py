@@ -29,9 +29,9 @@ def relation_page(request):
     else:
         body = request.body
         body = json.loads(body)
-        create_relation_record(request.user, body)
+        relation = create_relation_record(request.user, body)
 
-        return JsonResponse(data={}, status=200)
+        return JsonResponse(data=relation, status=200)
 
 @require_GET
 def relation_history(request, user_id):
