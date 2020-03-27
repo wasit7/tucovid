@@ -193,7 +193,7 @@
         peopleSearching.focus();
       },
       async searchPeople(keyword) {
-        const response = await axios.post("/account/search/", {
+        const response = await axios.post("/account/relation/search/", {
           keyword,
           reporter_id: this.reporter.id == this.peopleSearchingTarget.id ? null : this.reporter.id
         });

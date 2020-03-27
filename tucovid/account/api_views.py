@@ -5,7 +5,7 @@ from relation.models import Relationship
 import json
 
 @require_POST
-def search_profile_api(request):
+def search_relation_profile_api(request):
     body = request.body
     body = json.loads(body)
     keyword = body['keyword']
