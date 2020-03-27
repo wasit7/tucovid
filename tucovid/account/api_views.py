@@ -13,6 +13,8 @@ def search_profile_api(request):
     profiles = search_profile(keyword)
     response = []
 
+    reporter_id = None
+
     if body['reporter_id']:
         reporter_id = int(body['reporter_id'])
         profiles = profiles.exclude(pk=reporter_id)
