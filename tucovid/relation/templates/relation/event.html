@@ -1,0 +1,131 @@
+{% extends 'base_with_navbar.html' %} {% load static %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}" />
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+/>
+{% endblock %} {% block body %}
+<div class="container" id="event">
+  <div class="content">
+    <div class="title-block">
+      <p class="remove-margin">ปรับปรุงรายการกิจกรรมที่เข้าร่วม</p>
+    </div>
+    <div class="columns margin-top">
+      <div class="column is-3-5">
+        <div class="card medium-padding">
+          <div class="inline-field">
+            <p class="remove-margin">
+              ชื่อผู้รายงาน
+            </p>
+            <button class="field-button">
+              คลิกเพื่อเลือกผู้รายงานจากเมนูด้านขวา
+            </button>
+          </div>
+        </div>
+
+        <div class="card medium-padding">
+          <p class="card-subtitle remove-margin">
+            เพิ่มรายการกิจกรรมที่เข้าร่วม
+          </p>
+
+          <div class="inline-field margin-top">
+            <p class="remove-margin">
+              ชื่อกิจกรรม
+            </p>
+            <input type="text" class="inline-input" placeholder="ชื่อกิจกรรม" />
+          </div>
+
+          <div class="inline-field margin-top">
+            <p class="remove-margin">
+              เวลา
+            </p>
+            <div class="datetime-grid">
+              <input
+                type="text"
+                class="inline-input"
+                id="start-date"
+                placeholder="วันที่เริ่ม"
+              />
+              <input
+                type="text"
+                class="inline-input"
+                id="start-time"
+                placeholder="เวลาเริ่ม"
+              />
+              <p class="remove-margin">-</p>
+              <input
+                type="text"
+                id="finish-date"
+                class="inline-input"
+                placeholder="วันที่สิ้นสุด"
+              />
+              <input
+                type="text"
+                id="finish-time"
+                class="inline-input"
+                placeholder="เวลาสิ้นสุด"
+              />
+            </div>
+          </div>
+
+          <div class="inline-field margin-top">
+            <p class="remove-margin">
+              สถานที่
+            </p>
+            <textarea
+              class="inline-textarea"
+              id="location"
+              placeholder="สถานที่ที่จัดกิจกรรม"
+            ></textarea>
+          </div>
+
+          <div class="inline-field">
+            <p class="remove-margin">
+              ผู้ที่เข้าร่วม
+            </p>
+            <button class="field-button">
+              คลิกเพื่อเลือกชื่อผู้เข้าร่วมให้เลือกจากเมนูด้านขวา
+            </button>
+          </div>
+
+          <button class="button is-fullwidth margin-top is-primary">
+            เพิ่มรายการกิจกรรมที่เข้าร่วม
+          </button>
+        </div>
+      </div>
+      <div class="column is-2-5">
+        <div class="card remove-min-width medium-padding">
+          <label for="people_searching" class="label"
+            >ค้นหาบุคคล (กรุณาเลือกฟิลด์ที่ต้องการใส่ข้อมูลก่อน)</label
+          >
+          <input
+            type="text"
+            class="inline-input is-fullwidth"
+            id="people_searching"
+            name="people_searching"
+            placeholder="ค้นหาบุคคล"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://rawgit.com/jackmoore/autosize/master/dist/autosize.min.js"></script>
+<script>
+  autosize(document.getElementById("location"));
+  flatpickr("#start-date", {});
+  flatpickr("#start-time", {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i"
+  });
+  flatpickr("#finish-date", {});
+  flatpickr("#finish-time", {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i"
+  });
+</script>
+{% endblock %}
