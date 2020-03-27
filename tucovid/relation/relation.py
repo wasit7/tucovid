@@ -43,19 +43,19 @@ def get_event_history(user_id):
 
     events = [
         {
-            'name': event.name,
+            'title': event.title,
             'reporter': {
                 'name': event.reporter.profile.full_name
             },
             'location': event.location,
-            'start': event.start,
-            'finish': event.finish,
+            'start': event.start.strftime('%-d %b %Y %H:%M'),
+            'finish': event.finish.strftime('%-d %b %Y %H:%M'),
             'participants': [
                 {
                     'name': participant.profile.full_name
                 } for participant in event.participants.all()
             ]
         } for event in events
-    ]
+    ] 
 
     return events
