@@ -1,5 +1,6 @@
 from django.urls import path
-from relation.views import index, relation_page, relation_history
+from relation.views import index, relation_page
+from relation.api_views import relation_history
 
 app_name = 'relation'
 
