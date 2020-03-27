@@ -14,7 +14,7 @@ def search_relation_profile_api(request):
     response = []
 
     reporter_id = None
-
+    
     if body['reporter_id']:
         reporter_id = int(body['reporter_id'])
         profiles = profiles.exclude(user__pk=reporter_id)
@@ -27,5 +27,28 @@ def search_relation_profile_api(request):
                 'phone_no': profile.phone_no,
                 'extra_attribute': profile.extra_attribute
             })
+
+    return JsonResponse(data=response, status=200, safe=False)
+
+@require_POST
+def search_profile_api(request):
+    body = request.body
+    body = json.loads(body)
+    keyword = body['keyword']
+
+    profiles = search_profile(keyword)
+    excluding_ids = []
+
+    if body['excluding_ids']:
+        excluding_ids = [ int(id) for id in body['excluding_ids'] ]
+
+    response = [
+        {
+            'id': profile.user.pk,
+            'full_name': profile.full_name,
+            'phone_no': profile.phone_no,
+            'extra_attribute': profile.extra_attribute
+        } for profile in profiles.exclude(user__pk__in=excluding_ids)
+    ]
 
     return JsonResponse(data=response, status=200, safe=False)
