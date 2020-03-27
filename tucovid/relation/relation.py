@@ -1,5 +1,6 @@
-from relation.models import Relationship
+from relation.models import Relationship, Event
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 def get_history_relation(user_id):
     user = User.objects.get(pk=user_id)
@@ -31,3 +32,30 @@ def create_relation_record(user, data):
         'other_person': users.last().profile.full_name,
         'level': relation.get_level_display()
     }
+
+
+def get_event_history(user_id):
+    user = User.objects.get(pk=user_id)
+    events = Event.objects.filter(
+        Q(reporter=user) |
+        Q(participants=user)
+    ).order_by('-id')[:10]
+
+    events = [
+        {
+            'name': event.name,
+            'reporter': {
+                'name': event.reporter.profile.full_name
+            },
+            'location': event.location,
+            'start': event.start,
+            'finish': event.finish,
+            'participants': [
+                {
+                    'name': participant.profile.full_name
+                } for participant in event.participants.all()
+            ]
+        } for event in events
+    ]
+
+    return events
