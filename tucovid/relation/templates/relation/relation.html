@@ -1,7 +1,7 @@
 {% extends 'base_with_navbar.html' %} {% load static %} {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/form.css' %}" />
 {% endblock %} {% block body %}
-<div class="container">
+<div class="container" id="relation">
   <div class="content">
     <div class="title-block">
       <p class="remove-margin">ปรับปรุงรายการคนสนิท</p>
@@ -15,10 +15,10 @@
             </p>
             <button
               class="field-button"
-              id="reporter"
-              onclick="setTargetElement(event); activePeopleSearching();"
+              @click="activePeopleSearchingFor(reporter)"
             >
-              คลิกเพื่อเลือกผู้ให้ข้อมูลจากเมนูด้านขวา
+              ${ reporter.id ? reporter.name:
+              "คลิกเพื่อเลือกผู้ให้ข้อมูลจากเมนูด้านขวา" }
             </button>
           </div>
         </div>
@@ -33,21 +33,17 @@
             </p>
             <button
               class="field-button"
-              id="friend"
-              onclick="setTargetElement(event); activePeopleSearching();"
+              @click="activePeopleSearchingFor(friend)"
             >
-              เลือกผู้ใกล้ชิดจากเมนูด้านขวา
+              ${ friend.id ? friend.name:
+              "คลิกเพื่อเลือกผู้ใกล้ชิดจากเมนูด้านขวา" }
             </button>
           </div>
           <div class="inline-field">
             <p class="remove-margin">
               ระดับความสัมพันธ์
             </p>
-            <select
-              class="inline-select"
-              id="relation-level"
-              onchange="enableSubmitButtonIfDataComplete()"
-            >
+            <select class="inline-select" v-model="relationLevel">
               <option selected disabled value=""
                 >กรุณาเลือกระดับความสัมพันธ์</option
               >
@@ -58,15 +54,32 @@
           </div>
           <button
             class="button is-fullwidth margin-top is-primary"
-            id="submit-button"
-            onclick="submitRelation()"
-            disabled
+            @click="submitRelation()"
+            :disabled="!isSubmitButtonActive"
           >
             เพิ่มรายการคนใกล้ชิด
           </button>
         </div>
 
-        <div class="history margin-top"></div>
+        <div class="history margin-top" v-if="relationHistory.length">
+          <div class="title-block">
+            <p class="remove-margin">
+              รายการคนสนิทล่าสุดของ ${ reporter.name }
+            </p>
+          </div>
+          <div
+            class="card small-padding"
+            v-for="relation in relationHistory"
+            :key="relation.id"
+          >
+            <div class="inline-field">
+              <p class="helper remove-margin">ชื่อคนใกล้ชิด</p>
+              <p class="remove-margin friend">
+                ${ relation.other_person } ในฐานะ ${ relation.level }
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="column is-2">
         <div class="card remove-min-width medium-padding">
@@ -76,13 +89,37 @@
           <input
             type="text"
             class="inline-input is-fullwidth"
+            ref="peopleSearching"
             id="people_searching"
             name="people_searching"
             placeholder="ค้นหาบุคคล"
-            onkeyup="searching(event)"
-            disabled
+            v-model="searchingText"
+            :disabled="!isPeopleSearchingActive"
           />
-          <div class="suggestions"></div>
+          <div
+            class="suggestions"
+            v-if="isSuggestionDelay && searchingText.length >= 3"
+          >
+            <p class="helper remove-margin">กำลังค้นหา</p>
+          </div>
+          <div
+            class="suggestions"
+            v-if="!isSuggestionDelay && searchingText.length >= 3"
+          >
+            <div v-if="!suggestions.length">
+              <p class="remove-margin">ไม่พบบุคคลที่ใกล้เคียง</p>
+            </div>
+            <div
+              v-else
+              class="suggestion"
+              v-for="suggestion in suggestions"
+              :key="suggestion.id"
+              @click="selectSuggestion(suggestion)"
+            >
+              <h4 class="suggestion-title">${ suggestion.full_name }</h4>
+              <span class="phone-no">${ suggestion.phone_no }</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -90,210 +127,134 @@
 </div>
 {% endblock %} {% block extra_js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script>
   axios.defaults.xsrfCookieName = "csrftoken";
   axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
   axios.defaults.headers.common["Content-Type"] = "application/json";
   axios.defaults.headers.common["HTTP_X-CSRFToken"] = "{{ csrf_token }}";
 
-  let targetElement = null;
+  Vue.config.productionTip = false;
 
-  const setTargetElement = event => {
-    targetElement = event.toElement;
-  };
+  const app = new Vue({
+    el: "#relation",
+    delimiters: ["${", "}"],
+    data() {
+      return {
+        reporter: {
+          id: null,
+          name: null
+        },
+        friend: {
+          id: null,
+          name: null
+        },
+        relationLevel: "",
+        peopleSearchingTarget: null,
+        isPeopleSearchingActive: false,
+        suggestions: [],
+        relationHistory: [],
+        searchingText: "",
+        isSuggestionDelay: false
+      };
+    },
+    created() {
+      this.initReporter();
+    },
+    computed: {
+      isSubmitButtonActive() {
+        return this.reporter.id && this.friend.id && this.relationLevel;
+      }
+    },
+    methods: {
+      initReporter() {
+        this.reporter.name = localStorage.getItem("reportName");
+        this.reporter.id = localStorage.getItem("reportID");
+      },
+      async activePeopleSearchingFor(target) {
+        this.peopleSearchingTarget = target;
+        this.isPeopleSearchingActive = true;
+        const peopleSearching = await document.querySelector(
+          "#people_searching"
+        );
+        peopleSearching.focus();
+      },
+      async searchPeople(keyword) {
+        const response = await axios.post("/account/search/", {
+          keyword,
+          reporter_id: this.reporter.id
+        });
 
-  const activePeopleSearching = () => {
-    const peopleSearching = document.querySelector("#people_searching");
-    peopleSearching.disabled = false;
-    peopleSearching.focus();
-  };
+        return response;
+      },
+      selectSuggestion({ id, full_name }) {
+        this.peopleSearchingTarget.id = id;
+        this.peopleSearchingTarget.name = full_name;
+        this.clearSuggestions();
+      },
+      clearSuggestions() {
+        this.suggestions = [];
+        this.searchingText = "";
+      },
+      async getRelationHistory() {
+        const response = await axios.get(`history/${this.reporter.id}/`);
 
-  const resetPeopleSearching = () => {
-    const peopleSearching = document.querySelector("#people_searching");
-    peopleSearching.disabled = true;
-    peopleSearching.value = "";
-  };
+        return response;
+      },
+      storeReporterInLocalStorage() {
+        localStorage.setItem("reportName", this.reporter.name);
+        localStorage.setItem("reportID", this.reporter.id);
+      },
+      async createRelation() {
+        const response = await axios.post("", {
+          reporter_id: this.reporter.id,
+          friend_id: this.friend.id,
+          level: this.relationLevel
+        });
 
-  const createSearchingRequest = async keyword => {
-    const response = await axios.post("/account/search/", {
-      keyword,
-      reporter_id: reporter.dataset.id
-    });
+        return response;
+      },
+      resetRelation() {
+        this.friend = {
+          id: null,
+          name: null
+        };
+        this.relationLevel = "";
+      },
+      async submitRelation() {
+        const response = await this.createRelation();
+        const { data } = response;
+        this.relationHistory.unshift({
+          other_person:
+            data.person.full_name == this.reporter.name
+              ? data.other_person.full_name
+              : data.person.full_name,
+          id: data.pk,
+          level: data.level
+        });
+        this.resetRelation();
+      }
+    },
+    watch: {
+      async searchingText(value) {
+        if (value && value.length >= 3) {
+          this.isSuggestionDelay = true;
+          setTimeout(() => (this.isSuggestionDelay = false), 400);
 
-    return response;
-  };
-
-  const searching = async event => {
-    const { value } = event.target;
-    if (value.length >= 3) {
-      clearElement("suggestions");
-      setSearchingText("กำลังค้นหา");
-
-      const response = await createSearchingRequest(value);
-      const { data } = response;
-
-      setTimeout(() => {
-        clearElement("suggestions");
-        if (data.length) {
-          renderSuggestions(data);
-        } else {
-          setSearchingText("ไม่พบข้อมูล");
+          const response = await this.searchPeople(value);
+          const { data } = response;
+          this.suggestions = data;
         }
-      }, 300);
+      },
+      async "reporter.id"(value) {
+        if (value) {
+          const response = await this.getRelationHistory();
+          const { data } = response;
+          this.relationHistory = data;
+          this.storeReporterInLocalStorage();
+        }
+      }
     }
-  };
-
-  const createSuggestionElement = suggestion => {
-    const title = document.createElement("h4");
-    title.classList.add("suggestion-title");
-    title.innerHTML = suggestion.full_name;
-
-    const phoneNo = document.createElement("span");
-    phoneNo.classList.add("phone-no");
-    phoneNo.innerHTML = suggestion.phone_no;
-
-    const suggestionElement = document.createElement("div");
-    suggestionElement.classList.add("suggestion");
-    suggestionElement.dataset.id = suggestion.id;
-    suggestionElement.onclick = event => selectSuggestion(event);
-    suggestionElement.appendChild(title);
-    suggestionElement.appendChild(phoneNo);
-
-    return suggestionElement;
-  };
-
-  const renderSuggestions = suggestions => {
-    const suggestionsElement = document.querySelector(".suggestions");
-
-    for (let suggestion of suggestions) {
-      const suggestionElement = createSuggestionElement(suggestion);
-      suggestionsElement.appendChild(suggestionElement);
-    }
-  };
-
-  const clearElement = elementClass => {
-    const element = document.querySelector(`.${elementClass}`);
-    while (element.firstChild) {
-      element.removeChild(element.lastChild);
-    }
-  };
-
-  const setSearchingText = message => {
-    const suggestionsElement = document.querySelector(".suggestions");
-    const searchingText = document.createElement("span");
-    searchingText.classList.add("helper");
-    searchingText.innerHTML = message;
-
-    suggestionsElement.appendChild(searchingText);
-  };
-
-  const selectSuggestion = event => {
-    const { parentElement } = event.toElement;
-    targetElement.innerHTML = parentElement.firstChild.innerHTML;
-    targetElement.dataset.id = parentElement.dataset.id;
-
-    clearElement("suggestions");
-    resetPeopleSearching();
-    enableSubmitButtonIfDataComplete();
-
-    if (targetElement.id == "reporter") {
-      setHistory();
-    }
-  };
-
-  const enableSubmitButtonIfDataComplete = () => {
-    const reporter = document.querySelector("#reporter");
-    const friend = document.querySelector("#friend");
-    const level = document.querySelector("#relation-level");
-    const submitButton = document.querySelector("#submit-button");
-
-    submitButton.disabled = !(
-      reporter.dataset.id &&
-      friend.dataset.id &&
-      level.value
-    );
-  };
-
-  const submitRelation = async () => {
-    const reporter = document.querySelector("#reporter");
-    const friend = document.querySelector("#friend");
-    const level = document.querySelector("#relation-level");
-
-    const response = await axios.post("", {
-      reporter_id: reporter.dataset.id,
-      friend_id: friend.dataset.id,
-      level: level.value
-    });
-
-    localStorage.setItem("report_name", reporter.innerHTML);
-    localStorage.setItem("report_id", reporter.dataset.id);
-    location.reload();
-  };
-
-  const createTitleBlock = text => {
-    const title = document.createElement("p");
-    title.classList.add("remove-margin");
-    title.innerHTML = text;
-
-    const titleBlock = document.createElement("div");
-    titleBlock.classList.add("title-block");
-    titleBlock.appendChild(title);
-
-    return titleBlock;
-  };
-
-  const getRelationHistory = async userID => {
-    const response = await axios.get(`history/${userID}/`);
-
-    return response.data;
-  };
-
-  const createRelationHistoryElement = relation => {
-    const helper = document.createElement("p");
-    helper.classList.add("remove-margin", "helper");
-    helper.innerHTML = "ชื่อคนใกล้ชิด";
-    const friend = document.createElement("p");
-    friend.classList.add("remove-margin", "friend");
-    friend.innerHTML = `${relation.other_person} ในฐานะ ${relation.level}`;
-
-    const inline = document.createElement("div");
-    inline.classList.add("inline-field");
-    inline.appendChild(helper);
-    inline.appendChild(friend);
-
-    const relationHistoryElement = document.createElement("div");
-    relationHistoryElement.classList.add("card", "small-padding");
-    relationHistoryElement.appendChild(inline);
-
-    return relationHistoryElement;
-  };
-
-  const setHistory = async () => {
-    clearElement("history");
-    const titleBlock = createTitleBlock(
-      `รายการคนสนิทล่าสุดของ ${targetElement.innerHTML}`
-    );
-    const relationHistory = await getRelationHistory(targetElement.dataset.id);
-
-    const historyElement = document.querySelector(".history");
-    historyElement.appendChild(titleBlock);
-
-    for (let relation of relationHistory) {
-      const relationHistoryElement = createRelationHistoryElement(relation);
-      historyElement.appendChild(relationHistoryElement);
-    }
-  };
-
-  (() => {
-    const reportName = localStorage.getItem("report_name");
-    const reportID = localStorage.getItem("report_id");
-
-    if (reportName && reportID) {
-      targetElement = document.querySelector("#reporter");
-      targetElement.innerHTML = reportName;
-      targetElement.dataset.id = reportID;
-      setHistory();
-    }
-  })();
+  });
 </script>
 {% endblock %}
