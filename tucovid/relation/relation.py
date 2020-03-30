@@ -29,7 +29,7 @@ def get_event_history(user_id):
     events = Event.objects.filter(
         Q(reporter=user) |
         Q(participants=user)
-    ).order_by('-id')[:10]
+    ).distinct('id').order_by('-id')[:10]
 
     return [ map_event(event) for event in events ] 
 
