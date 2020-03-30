@@ -152,3 +152,4 @@ STATICFILES_DIRS = [
 ]
 
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'relation:index'
+LOGIN_URL = 'account:login_page'
