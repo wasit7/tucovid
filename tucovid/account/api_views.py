@@ -1,6 +1,7 @@
 from django.http import JsonResponse
-from account.profile import search_profile
 from django.views.decorators.http import require_POST
+from account.profile import search_profile
+from account.datasources import map_profile
 from relation.models import Relationship
 import json
 
@@ -21,12 +22,7 @@ def search_relation_profile_api(request):
 
     for profile in profiles:
         if not Relationship.objects.filter(persons__pk=reporter_id).filter(persons__pk=profile.user.pk).exists():
-            response.append({
-                'id': profile.user.pk,
-                'full_name': profile.full_name,
-                'phone_no': profile.phone_no,
-                'extra_attribute': profile.extra_attribute
-            })
+            response.append(map_profile(profile))
 
     return JsonResponse(data=response, status=200, safe=False)
 
@@ -42,13 +38,6 @@ def search_profile_api(request):
     if body['excluding_ids']:
         excluding_ids = [ int(id) for id in body['excluding_ids'] ]
 
-    response = [
-        {
-            'id': profile.user.pk,
-            'full_name': profile.full_name,
-            'phone_no': profile.phone_no,
-            'extra_attribute': profile.extra_attribute
-        } for profile in profiles.exclude(user__pk__in=excluding_ids)
-    ]
+    response = [ map_profile(profile) for profile in profiles.exclude(user__pk__in=excluding_ids) ]
 
     return JsonResponse(data=response, status=200, safe=False)
