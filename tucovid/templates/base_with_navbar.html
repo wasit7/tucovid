@@ -12,7 +12,9 @@
   <body>
     <div class="navbar">
       <div class="navbar-logo">
-        <img src="{% static 'Thammasat_main_logo.png' %}" class="logo" alt="TU Covid logo">
+        <a href="{% url 'relation:index' %}">
+          <img src="{% static 'Thammasat_main_logo.png' %}" class="logo" alt="TU Covid logo">
+        </a>
       </div>
       <div class="menu-start">
         {% if request.user.profile %}

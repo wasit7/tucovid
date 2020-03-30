@@ -471,19 +471,19 @@
 <!-- for render datetime-picker and textare -->
 <script>
   autosize(document.getElementById("location"));
+
+  const flatTimePickerConfig = {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+    time_24hr: true,
+    defaultHour: new Date().getHours(),
+    defaultMinute: new Date().getMinutes(),
+  };
+
   flatpickr("#start-date", {});
-  flatpickr("#start-time", {
-    enableTime: true,
-    noCalendar: true,
-    dateFormat: "H:i",
-    time_24hr: true
-  });
+  flatpickr("#start-time", flatTimePickerConfig);
   flatpickr("#finish-date", {});
-  flatpickr("#finish-time", {
-    enableTime: true,
-    noCalendar: true,
-    dateFormat: "H:i",
-    time_24hr: true
-  });
+  flatpickr("#finish-time", flatTimePickerConfig);
 </script>
 {% endblock %}

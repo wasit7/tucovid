@@ -2,70 +2,39 @@ from relation.models import Relationship, Event
 from django.contrib.auth.models import User
 from django.db.models import Q
 from datetime import datetime
+from relation.datasources import map_relation, map_event
 
-def get_history_relation(user_id):
+def get_relation_history(user_id):
     user = User.objects.get(pk=user_id)
     relations = Relationship.objects.filter(persons=user).order_by('-id')[:10]
 
-    relations = [
-        {
-            'id': relation.pk,
-            'other_person': relation.persons.exclude(pk=user.pk).first().profile.full_name,
-            'level': relation.get_level_display()
-        } for relation in relations
-    ]
-
-    return relations
+    return [ map_relation(relation, user) for relation in relations ]
 
 def create_relation_record(user, data):
-    reporter_id = data['reporter_id'] if user.is_staff : user
-
-    users = User.objects.filter(pk__in=[reporter_id, data['friend_id']])
+    reporter_id = data['reporter_id'] if user.is_staff else user
+    reporter = User.objects.get(pk=reporter_id)
+    friend = User.objects.get(pk=data['friend_id'])
 
     relation = Relationship()
     relation.level = data['level']
     relation.created_by = user
     relation.save()
 
-    relation.persons.set(users)
+    relation.persons.set([reporter, friend])
 
-    return {
-        'id': relation.pk,
-        'person': users.first().profile.full_name,
-        'other_person': users.last().profile.full_name,
-        'level': relation.get_level_display()
-    }
-
+    return map_relation(relation, reporter)
 
 def get_event_history(user_id):
     user = User.objects.get(pk=user_id)
     events = Event.objects.filter(
         Q(reporter=user) |
         Q(participants=user)
-    ).order_by('-id')[:10]
+    ).distinct('id').order_by('-id')[:10]
 
-    events = [
-        {
-            'id': event.pk,
-            'title': event.title,
-            'reporter': {
-                'name': event.reporter.profile.full_name
-            },
-            'location': event.location,
-            'start': event.start.strftime('%-d %b %Y %H:%M'),
-            'finish': event.finish.strftime('%-d %b %Y %H:%M'),
-            'participants': [
-                {
-                    'name': participant.profile.full_name
-                } for participant in event.participants.all()
-            ]
-        } for event in events
-    ] 
-
-    return events
+    return [ map_event(event) for event in events ] 
 
 def create_event_record(user, data):
-    reporter_id = data['reporter_id'] if user.is_staff : user
+    reporter_id = data['reporter_id'] if user.is_staff else user
 
     reporter = User.objects.get(pk=reporter_id)
     participants = User.objects.filter(pk__in=data['participants'])
@@ -81,18 +50,4 @@ def create_event_record(user, data):
 
     event.participants.set(participants)
 
-    return {
-        'id': event.pk,
-        'title': event.title,
-        'reporter': {
-            'name': event.reporter.profile.full_name
-        },
-        'location': event.location,
-        'start': event.start.strftime('%-d %b %Y %H:%M'),
-        'finish': event.finish.strftime('%-d %b %Y %H:%M'),
-        'participants': [
-            {
-                'name': participant.profile.full_name
-            } for participant in event.participants.all()
-        ]
-    }
+    return map_event(event)

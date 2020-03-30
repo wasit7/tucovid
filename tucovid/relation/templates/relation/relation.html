@@ -238,14 +238,7 @@
       async submitRelation() {
         const response = await this.createRelation();
         const { data } = response;
-        this.relationHistory.unshift({
-          other_person:
-            data.person.full_name == this.reporter.name
-              ? data.other_person.full_name
-              : data.person.full_name,
-          id: data.pk,
-          level: data.level
-        });
+        this.relationHistory.unshift(data);
         this.resetRelation();
       }
     },

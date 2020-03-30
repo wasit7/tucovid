@@ -51,7 +51,6 @@ input[type="text"]:hover::placeholder,
 }
 
 .inline-input {
-  flex-grow: 1;
   padding: 0.125rem 0.75rem;
   border: none;
   outline: none;
@@ -98,7 +97,6 @@ input[type="text"]:hover::placeholder,
 }
 
 .inline-select {
-  flex-grow: 1;
   border-radius: 4px;
   border: 1px solid #dbdbdb;
 }
@@ -109,7 +107,6 @@ input[type="text"]:hover::placeholder,
   outline: none;
   padding: 0.125rem 0.75rem;
   border-bottom: 1px solid #dbdbdb;
-  flex-grow: 1;
   resize: none;
 }
 
@@ -127,5 +124,9 @@ input[type="text"]:hover::placeholder,
 }
 
 .participant > .title {
+  flex-grow: 1;
+}
+
+.inline-field > :last-child {
   flex-grow: 1;
 }

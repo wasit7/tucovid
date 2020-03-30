@@ -17,14 +17,13 @@ def index(request):
 @login_required
 @user_must_have_profile
 def relation_page(request):
-    context = dict()
-
     if request.method == 'GET':
+        context = dict()
         context['relation_level'] = RELATION_LEVELS
         
         return render(request, 'relation/relation.html', context=context)
 
-    else:
+    elif request.method == 'POST':
         body = request.body
         body = json.loads(body)
         relation = create_relation_record(request.user, body)
@@ -38,7 +37,7 @@ def event_page(request):
     if request.method == 'GET':
         return render(request, 'relation/event.html')
 
-    else:
+    elif request.method == 'POST':
         body = request.body
         body = json.loads(body)
         event = create_event_record(request.user, body)
