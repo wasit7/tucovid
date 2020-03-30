@@ -2,7 +2,7 @@ from relation.models import Relationship, Event
 from django.contrib.auth.models import User
 from django.db.models import Q
 from datetime import datetime
-from relation.datasources import map_relation
+from relation.datasources import map_relation, map_event
 
 def get_relation_history(user_id):
     user = User.objects.get(pk=user_id)
@@ -31,25 +31,7 @@ def get_event_history(user_id):
         Q(participants=user)
     ).order_by('-id')[:10]
 
-    events = [
-        {
-            'id': event.pk,
-            'title': event.title,
-            'reporter': {
-                'name': event.reporter.profile.full_name
-            },
-            'location': event.location,
-            'start': event.start.strftime('%-d %b %Y %H:%M'),
-            'finish': event.finish.strftime('%-d %b %Y %H:%M'),
-            'participants': [
-                {
-                    'name': participant.profile.full_name
-                } for participant in event.participants.all()
-            ]
-        } for event in events
-    ] 
-
-    return events
+    return [ map_event(event) for event in events ] 
 
 def create_event_record(user, data):
     reporter_id = data['reporter_id'] if user.is_staff else user
@@ -68,18 +50,4 @@ def create_event_record(user, data):
 
     event.participants.set(participants)
 
-    return {
-        'id': event.pk,
-        'title': event.title,
-        'reporter': {
-            'name': event.reporter.profile.full_name
-        },
-        'location': event.location,
-        'start': event.start.strftime('%-d %b %Y %H:%M'),
-        'finish': event.finish.strftime('%-d %b %Y %H:%M'),
-        'participants': [
-            {
-                'name': participant.profile.full_name
-            } for participant in event.participants.all()
-        ]
-    }
+    return map_event(event)
