@@ -1,0 +1,7 @@
+@media only screen and (max-width: 768px) {
+  .centered-container > .card {
+    min-width: auto;
+    background-color: #fafafa;
+    box-shadow: none;
+  }
+}
