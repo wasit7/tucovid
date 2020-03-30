@@ -1,6 +1,7 @@
 from relation.models import Relationship, Event
 from django.contrib.auth.models import User
 from django.db.models import Q
+from datetime import datetime
 
 def get_history_relation(user_id):
     user = User.objects.get(pk=user_id)
@@ -60,3 +61,34 @@ def get_event_history(user_id):
     ] 
 
     return events
+
+def create_event_record(user, data):
+    reporter = User.objects.get(pk=data['reporter_id'])
+    participants = User.objects.filter(pk__in=data['participants'])
+
+    event = Event()
+    event.title = data['title']
+    event.start = datetime.strptime(data['start'], '%Y-%m-%d %H:%M')
+    event.finish = datetime.strptime(data['finish'], '%Y-%m-%d %H:%M')
+    event.location = data['location']
+    event.reporter = reporter
+    event.created_by = user
+    event.save()
+
+    event.participants.set(participants)
+
+    return {
+        'id': event.pk,
+        'title': event.title,
+        'reporter': {
+            'name': event.reporter.profile.full_name
+        },
+        'location': event.location,
+        'start': event.start.strftime('%-d %b %Y %H:%M'),
+        'finish': event.finish.strftime('%-d %b %Y %H:%M'),
+        'participants': [
+            {
+                'name': participant.profile.full_name
+            } for participant in event.participants.all()
+        ]
+    }

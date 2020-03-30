@@ -128,6 +128,7 @@
           </div>
           <button
             class="button is-fullwidth margin-top is-primary"
+            @click="submitEvent"
             :disabled="!isSubmitButtonActive"
           >
             เพิ่มรายการกิจกรรมที่เข้าร่วม
@@ -244,6 +245,39 @@
 
   Vue.config.productionTip = false;
 
+  const paddingTo2Digits = number => {
+    return number < 10 ? `0${number}` : number;
+  };
+
+  const getMonthInThai = monthNo => {
+    switch (monthNo) {
+      case 0:
+        return "มกราคม";
+      case 1:
+        return "กุมภาพันธ์";
+      case 2:
+        return "มีนาคม";
+      case 3:
+        return "เมษายน";
+      case 4:
+        return "พฤษภาคม";
+      case 5:
+        return "มิถุนายน";
+      case 6:
+        return "กรกฏาคม";
+      case 7:
+        return "สิงหาคม";
+      case 8:
+        return "กันยายน";
+      case 9:
+        return "ตุลาคม";
+      case 10:
+        return "พฤศจิกายน";
+      case 11:
+        return "ธันวาคม";
+    }
+  };
+
   const app = new Vue({
     el: "#event",
     delimiters: ["${", "}"],
@@ -357,6 +391,42 @@
         const response = await axios.get(`history/${this.reporter.id}/`);
 
         return response;
+      },
+      async createEvent() {
+        const response = await axios.post("", {
+          reporter_id: this.reporter.id,
+          participants: this.event.participants.map(
+            participant => participant.id
+          ),
+          title: this.event.name,
+          start: `${this.event.start.date} ${this.event.start.time}`,
+          finish: `${this.event.finish.date} ${this.event.finish.time}`,
+          location: this.event.location
+        });
+
+        return response;
+      },
+      async submitEvent() {
+        const response = await this.createEvent();
+        const { data: createdEvent } = response;
+
+        this.eventHistory.unshift(createdEvent);
+        this.resetEventForm();
+      },
+      resetEventForm() {
+        this.event = {
+          name: null,
+          start: {
+            date: null,
+            time: null
+          },
+          finish: {
+            date: null,
+            time: null
+          },
+          location: null,
+          participants: []
+        };
       }
     },
     watch: {
@@ -387,48 +457,11 @@
     filters: {
       translateMonth(value) {
         const date = new Date(value);
-        let month = null;
+        let month = getMonthInThai(date.getMonth());
 
-        switch (date.getMonth()) {
-          case 0:
-            month = "มกราคม";
-            break;
-          case 1:
-            month = "กุมภาพันธ์";
-            break;
-          case 2:
-            month = "มีนาคม";
-            break;
-          case 3:
-            month = "เมษายน";
-            break;
-          case 4:
-            month = "พฤษภาคม";
-            break;
-          case 5:
-            month = "มิถุนายน";
-            break;
-          case 6:
-            month = "กรกฏาคม";
-            break;
-          case 7:
-            month = "สิงหาคม";
-            break;
-          case 8:
-            month = "กันยายน";
-            break;
-          case 9:
-            month = "ตุลาคม";
-            break;
-          case 10:
-            month = "พฤศจิกายน";
-            break;
-          case 11:
-            month = "ธันวาคม";
-            break;
-        }
-
-        return `${date.getDate()} ${month} ${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+        return `${date.getDate()} ${month} ${date.getFullYear()} ${paddingTo2Digits(
+          date.getHours()
+        )}:${paddingTo2Digits(date.getMinutes())}`;
       }
     }
   });
