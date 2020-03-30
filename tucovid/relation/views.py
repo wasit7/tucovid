@@ -23,7 +23,7 @@ def relation_page(request):
         
         return render(request, 'relation/relation.html', context=context)
 
-    else:
+    elif request.method == 'POST':
         body = request.body
         body = json.loads(body)
         relation = create_relation_record(request.user, body)
@@ -37,7 +37,7 @@ def event_page(request):
     if request.method == 'GET':
         return render(request, 'relation/event.html')
 
-    else:
+    elif request.method == 'POST':
         body = request.body
         body = json.loads(body)
         event = create_event_record(request.user, body)
