@@ -4,6 +4,6 @@ def is_anonymous(function):
             return function(request, *args, **kwargs)
 
         else:
-            return None # redirect to index
+            return redirect('relation:index')
 
     return wrap
