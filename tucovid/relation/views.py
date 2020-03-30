@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_GET, require_http_methods
-from relation.relation import get_history_relation, create_relation_record
+from relation.relation import create_relation_record, create_event_record
 from relation.models import RELATION_LEVELS
 import json
 
@@ -21,7 +21,7 @@ def index(request):
 def relation_page(request):
     context = dict()
 
-    if request.method == "GET":
+    if request.method == 'GET':
         context['relation_level'] = RELATION_LEVELS
         
         return render(request, 'relation/relation.html', context=context)
@@ -33,8 +33,15 @@ def relation_page(request):
 
         return JsonResponse(data=relation, status=200)
 
-@require_GET
-def relation_history(request, user_id):
-    relation_history = get_history_relation(user_id)
+@require_http_methods(['GET', 'POST'])
+@login_required
+def event_page(request):
+    if request.method == 'GET':
+        return render(request, 'relation/event.html')
 
-    return JsonResponse(data=relation_history, status=200, safe=False)
+    else:
+        body = request.body
+        body = json.loads(body)
+        event = create_event_record(request.user, body)
+
+        return JsonResponse(data=event, status=200)

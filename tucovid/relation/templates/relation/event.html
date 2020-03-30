@@ -1,0 +1,487 @@
+{% extends 'base_with_navbar.html' %} {% load static %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}" />
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+/>
+<script
+  defer
+  src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
+></script>
+{% endblock %} {% block body %}
+<div class="container" id="event">
+  <div class="content">
+    <div class="title-block">
+      <p class="remove-margin">ปรับปรุงรายการกิจกรรมที่เข้าร่วม</p>
+    </div>
+    <div class="columns margin-top">
+      <div class="column is-3-5">
+        <div class="card medium-padding">
+          <div class="inline-field">
+            <p class="remove-margin">
+              ชื่อผู้รายงาน
+            </p>
+            <button
+              class="field-button"
+              @click="activePeopleSearchingFor(reporter)"
+            >
+              ${ reporter.id ? reporter.name:
+              "คลิกเพื่อเลือกผู้ให้ข้อมูลจากเมนูด้านขวา" }
+            </button>
+          </div>
+        </div>
+
+        <div class="card medium-padding">
+          <p class="card-subtitle remove-margin">
+            เพิ่มรายการกิจกรรมที่เข้าร่วม
+          </p>
+          <div class="inline-field margin-top">
+            <p class="remove-margin">
+              ชื่อกิจกรรม
+            </p>
+            <input
+              type="text"
+              class="inline-input"
+              placeholder="ชื่อกิจกรรม"
+              v-model="event.name"
+            />
+          </div>
+
+          <div class="inline-field margin-top">
+            <p class="remove-margin">
+              เวลา
+            </p>
+            <div class="datetime-grid">
+              <input
+                type="text"
+                class="inline-input"
+                id="start-date"
+                placeholder="วันที่เริ่ม"
+                v-model="event.start.date"
+              />
+              <input
+                type="text"
+                class="inline-input"
+                id="start-time"
+                placeholder="เวลาเริ่ม"
+                v-model="event.start.time"
+              />
+              <p class="remove-margin">-</p>
+              <input
+                type="text"
+                id="finish-date"
+                class="inline-input"
+                placeholder="วันที่สิ้นสุด"
+                v-model="event.finish.date"
+              />
+              <input
+                type="text"
+                id="finish-time"
+                class="inline-input"
+                placeholder="เวลาสิ้นสุด"
+                v-model="event.finish.time"
+              />
+            </div>
+          </div>
+
+          <div class="inline-field margin-top">
+            <p class="remove-margin">
+              สถานที่
+            </p>
+            <textarea
+              class="inline-textarea"
+              id="location"
+              placeholder="สถานที่ที่จัดกิจกรรม"
+              v-model="event.location"
+            ></textarea>
+          </div>
+
+          <div class="inline-field">
+            <p class="remove-margin">
+              ผู้ที่เข้าร่วม
+            </p>
+            <div class="participants">
+              <button
+                class="field-button"
+                @click="activePeopleSearchingFor(event.participants)"
+              >
+                คลิกเพื่อเลือกชื่อผู้เข้าร่วมให้เลือกจากเมนูด้านขวา
+              </button>
+              <div
+                class="participant"
+                v-for="participant in event.participants"
+                :key="participant.id"
+              >
+                <div class="title">
+                  ${ participant.name }
+                </div>
+                <div class="delete-icon">
+                  <button
+                    class="icon-button"
+                    @click="deleteParticipant(participant)"
+                  >
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="button is-fullwidth margin-top is-primary"
+            @click="submitEvent"
+            :disabled="!isSubmitButtonActive"
+          >
+            เพิ่มรายการกิจกรรมที่เข้าร่วม
+          </button>
+        </div>
+
+        <div class="history margin-top" v-if="eventHistory.length">
+          <div class="title-block">
+            <p class="remove-margin">
+              รายการกิจกรรมที่เกี่ยวข้องของ ${ reporter.name }
+            </p>
+          </div>
+          <div
+            class="card small-padding"
+            v-for="event in eventHistory"
+            :key="event.id"
+          >
+            <div class="inline-field">
+              <p class="event-title remove-margin">${ event.title }</p>
+            </div>
+            <div class="inline-field">
+              <p class="helper remove-margin">วันเวลา</p>
+              <p class="remove-margin event-detail">
+                ${ event.start|translateMonth } ถึง ${
+                event.finish|translateMonth }
+              </p>
+            </div>
+            <div class="inline-field">
+              <p class="helper remove-margin">สถานที่</p>
+              <p class="remove-margin event-detail">
+                ${ event.location }
+              </p>
+            </div>
+            <div class="inline-field">
+              <p class="helper remove-margin">ผู้รายงาน</p>
+              <p class="remove-margin event-detail">
+                ${ event.reporter.name }
+              </p>
+            </div>
+            <div class="inline-field">
+              <p class="helper remove-margin">ผู้รายงาน</p>
+              <p class="remove-margin event-detail">
+                ${ event.participants.map(participant =>
+                participant.name).join(", ") }
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column is-2-5">
+        <div class="card remove-min-width medium-padding">
+          <label for="people_searching" class="label"
+            >ค้นหาบุคคล (กรุณาเลือกฟิลด์ที่ต้องการใส่ข้อมูลก่อน)</label
+          >
+          <input
+            type="text"
+            class="inline-input is-fullwidth"
+            id="people_searching"
+            name="people_searching"
+            placeholder="ค้นหาบุคคล"
+            v-model="searchingText"
+            :disabled="!isPeopleSearchingActive"
+          />
+          <div
+            class="suggestions"
+            v-if="isSuggestionDelay && searchingText.length >= 3"
+          >
+            <p class="helper remove-margin">กำลังค้นหา</p>
+          </div>
+          <div
+            class="suggestions"
+            v-if="!isSuggestionDelay && searchingText.length >= 3"
+          >
+            <div v-if="!suggestions.length">
+              <p class="remove-margin">ไม่พบบุคคลที่ใกล้เคียง</p>
+            </div>
+            <div
+              v-else
+              class="suggestion"
+              v-for="suggestion in suggestions"
+              :key="suggestion.id"
+              @click="selectSuggestion(suggestion)"
+            >
+              <h4 class="suggestion-title">${ suggestion.full_name }</h4>
+              <span class="phone-no">
+                ${ suggestion.phone_no }
+                <a
+                  @click.stop
+                  :href="`/account/profile/${ suggestion.id }`"
+                  target="_blank"
+                  >ข้อมูลเพิ่มเติม</a
+                >
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %} {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://rawgit.com/jackmoore/autosize/master/dist/autosize.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!-- for manipulate DOM -->
+<script>
+  axios.defaults.xsrfCookieName = "csrftoken";
+  axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+  axios.defaults.headers.common["Content-Type"] = "application/json";
+  axios.defaults.headers.common["HTTP_X-CSRFToken"] = "{{ csrf_token }}";
+
+  Vue.config.productionTip = false;
+
+  const paddingTo2Digits = number => {
+    return number < 10 ? `0${number}` : number;
+  };
+
+  const getMonthInThai = monthNo => {
+    switch (monthNo) {
+      case 0:
+        return "มกราคม";
+      case 1:
+        return "กุมภาพันธ์";
+      case 2:
+        return "มีนาคม";
+      case 3:
+        return "เมษายน";
+      case 4:
+        return "พฤษภาคม";
+      case 5:
+        return "มิถุนายน";
+      case 6:
+        return "กรกฏาคม";
+      case 7:
+        return "สิงหาคม";
+      case 8:
+        return "กันยายน";
+      case 9:
+        return "ตุลาคม";
+      case 10:
+        return "พฤศจิกายน";
+      case 11:
+        return "ธันวาคม";
+    }
+  };
+
+  const app = new Vue({
+    el: "#event",
+    delimiters: ["${", "}"],
+    data() {
+      return {
+        reporter: {
+          id: null,
+          name: null
+        },
+        event: {
+          name: null,
+          start: {
+            date: null,
+            time: null
+          },
+          finish: {
+            date: null,
+            time: null
+          },
+          location: null,
+          participants: []
+        },
+        searchingText: "",
+        suggestions: [],
+        isSuggestionDelay: false,
+        isPeopleSearchingActive: false,
+        eventHistory: []
+      };
+    },
+    created() {
+      this.initReporter();
+    },
+    computed: {
+      isSubmitButtonActive() {
+        return (
+          this.reporter.id &&
+          this.event.name &&
+          this.event.start.date &&
+          this.event.start.time &&
+          this.event.finish.date &&
+          this.event.finish.time &&
+          this.event.location &&
+          this.event.participants.length
+        );
+      },
+      isStaff() {
+        return "{{ request.user.is_staff }}" == "True";
+      },
+      excludingProfile() {
+        const existsProfile = [...this.event.participants];
+        existsProfile.push(this.reporter);
+        return existsProfile
+          .map(profile => profile.id)
+          .filter(profile => profile);
+      }
+    },
+    methods: {
+      initReporter() {
+        if (this.isStaff) {
+          this.reporter.name = localStorage.getItem("reportName");
+          this.reporter.id = localStorage.getItem("reportID");
+        } else {
+          this.reporter.name = "{{ request.user.profile.full_name }}";
+          this.reporter.id = "{{ request.user.pk }}";
+        }
+      },
+      async activePeopleSearchingFor(target) {
+        this.peopleSearchingTarget = target;
+        this.isPeopleSearchingActive = true;
+        this.clearSuggestions();
+        const peopleSearching = await document.querySelector(
+          "#people_searching"
+        );
+        peopleSearching.focus();
+      },
+      async searchPeople(keyword) {
+        const response = await axios.post("/account/event/search/", {
+          keyword,
+          excluding_ids: this.excludingProfile
+        });
+
+        return response;
+      },
+      selectSuggestion({ id, full_name }) {
+        if (Array.isArray(this.peopleSearchingTarget)) {
+          this.peopleSearchingTarget.push({
+            id,
+            name: full_name
+          });
+        } else {
+          this.peopleSearchingTarget.id = id;
+          this.peopleSearchingTarget.name = full_name;
+        }
+
+        this.clearSuggestions();
+      },
+      clearSuggestions() {
+        this.suggestions = [];
+        this.searchingText = "";
+      },
+      storeReporterInLocalStorage() {
+        localStorage.setItem("reportName", this.reporter.name);
+        localStorage.setItem("reportID", this.reporter.id);
+      },
+      deleteParticipant({ id }) {
+        this.event.participants = this.event.participants.filter(
+          participant => participant.id !== id
+        );
+      },
+      async getEventHistory() {
+        const response = await axios.get(`history/${this.reporter.id}/`);
+
+        return response;
+      },
+      async createEvent() {
+        const response = await axios.post("", {
+          reporter_id: this.reporter.id,
+          participants: this.event.participants.map(
+            participant => participant.id
+          ),
+          title: this.event.name,
+          start: `${this.event.start.date} ${this.event.start.time}`,
+          finish: `${this.event.finish.date} ${this.event.finish.time}`,
+          location: this.event.location
+        });
+
+        return response;
+      },
+      async submitEvent() {
+        const response = await this.createEvent();
+        const { data: createdEvent } = response;
+
+        this.eventHistory.unshift(createdEvent);
+        this.resetEventForm();
+      },
+      resetEventForm() {
+        this.event = {
+          name: null,
+          start: {
+            date: null,
+            time: null
+          },
+          finish: {
+            date: null,
+            time: null
+          },
+          location: null,
+          participants: []
+        };
+      }
+    },
+    watch: {
+      async searchingText(value) {
+        if (value && value.length >= 3) {
+          this.isSuggestionDelay = true;
+          setTimeout(() => (this.isSuggestionDelay = false), 400);
+
+          const response = await this.searchPeople(value);
+          const { data } = response;
+          this.suggestions = data;
+        }
+      },
+      async "reporter.id"(value) {
+        if (value) {
+          const response = await this.getEventHistory();
+          const { data } = response;
+          this.eventHistory = data;
+          this.storeReporterInLocalStorage();
+        }
+      },
+      "event.start.date"(value) {
+        if (value && !this.event.finish.date) {
+          this.event.finish.date = value;
+        }
+      }
+    },
+    filters: {
+      translateMonth(value) {
+        const date = new Date(value);
+        let month = getMonthInThai(date.getMonth());
+
+        return `${date.getDate()} ${month} ${date.getFullYear()} ${paddingTo2Digits(
+          date.getHours()
+        )}:${paddingTo2Digits(date.getMinutes())}`;
+      }
+    }
+  });
+</script>
+<!-- for render datetime-picker and textare -->
+<script>
+  autosize(document.getElementById("location"));
+  flatpickr("#start-date", {});
+  flatpickr("#start-time", {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+    time_24hr: true
+  });
+  flatpickr("#finish-date", {});
+  flatpickr("#finish-time", {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+    time_24hr: true
+  });
+</script>
+{% endblock %}

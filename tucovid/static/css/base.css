@@ -95,7 +95,7 @@ body {
 }
 
 .content {
-  min-width: 1160px;
+  width: 1160px;
   text-align: left;
 }
 
@@ -105,20 +105,24 @@ body {
 }
 
 .columns {
-  margin-top: 2rem;
   display: flex;
+  flex-grow: 1;
 }
 
 .column + .column {
   margin-left: 1rem;
 }
 
-.column.is-3 {
+.column.is-3-5 {
   width: 60%;
 }
 
-.column.is-2 {
+.column.is-2-5 {
   width: 40%;
+}
+
+.column.is-1-4 {
+  width: 25%;
 }
 
 .remove-min-width {
@@ -166,6 +170,28 @@ body {
   margin-top: 1rem;
 }
 
-.friend {
+.friend,
+.event-detail {
   flex-grow: 1;
+}
+
+.datetime-grid {
+  width: 78%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) auto repeat(2, minmax(0, 1fr));
+  grid-column-gap: 0.5rem;
+}
+
+.icon-button {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  font-size: 1.25rem;
+  color: #848484;
+  cursor: pointer;
+}
+
+.event-title {
+  font-size: 1.5rem;
+  color: #d3103f;
 }

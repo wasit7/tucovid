@@ -29,7 +29,7 @@ class Event(models.Model):
     title = models.CharField(max_length=255)
     start = models.DateTimeField()
     finish = models.DateTimeField()
-    localtion = models.TextField()
+    location = models.TextField()
     reporter = models.ForeignKey(User, on_delete=models.PROTECT, related_name='event_reporter')
     participants = models.ManyToManyField(User, related_name='participant')
     created_date = models.DateTimeField(auto_now=True)
