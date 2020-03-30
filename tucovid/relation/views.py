@@ -8,11 +8,9 @@ from account.decorators import user_must_have_profile
 import json
 
 @require_GET
+@login_required
 @user_must_have_profile
 def index(request):
-    if request.user.is_anonymous:
-        return redirect('account:login_page')
-
     return redirect('relation:relation_page')
 
 @require_http_methods(['GET', 'POST'])
