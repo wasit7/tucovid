@@ -21,10 +21,11 @@ def create_relation_record(user, data):
     persons = [ int(data['reporter_id']), int(data['friend_id']) ]
     users = User.objects.filter(pk__in=persons)
 
-    relation = Relationship.objects.create(
-        level=data['level'],
-        created_by=user
-    )
+    relation = Relationship()
+    relation.level = data['level']
+    relation.created_by = user
+    relation.save()
+
     relation.persons.set(users)
 
     return {
