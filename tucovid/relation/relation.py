@@ -18,8 +18,9 @@ def get_history_relation(user_id):
     return relations
 
 def create_relation_record(user, data):
-    persons = [ int(data['reporter_id']), int(data['friend_id']) ]
-    users = User.objects.filter(pk__in=persons)
+    reporter_id = data['reporter_id'] if user.is_staff : user
+
+    users = User.objects.filter(pk__in=[reporter_id, data['friend_id']])
 
     relation = Relationship()
     relation.level = data['level']
@@ -64,7 +65,9 @@ def get_event_history(user_id):
     return events
 
 def create_event_record(user, data):
-    reporter = User.objects.get(pk=data['reporter_id'])
+    reporter_id = data['reporter_id'] if user.is_staff : user
+
+    reporter = User.objects.get(pk=reporter_id)
     participants = User.objects.filter(pk__in=data['participants'])
 
     event = Event()
