@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from datetime import datetime
 
-def get_history_relation(user_id):
+def get_relation_history(user_id):
     user = User.objects.get(pk=user_id)
     relations = Relationship.objects.filter(persons=user).order_by('-id')[:10]
 
