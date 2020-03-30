@@ -16,20 +16,22 @@
     </div>
     <div class="columns margin-top">
       <div class="column is-3-5">
-        <div class="card medium-padding">
-          <div class="inline-field">
-            <p class="remove-margin">
-              ชื่อผู้รายงาน
-            </p>
-            <button
-              class="field-button"
-              @click="activePeopleSearchingFor(reporter)"
-            >
-              ${ reporter.id ? reporter.name:
-              "คลิกเพื่อเลือกผู้ให้ข้อมูลจากเมนูด้านขวา" }
-            </button>
+        {% if request.user.is_staff %}
+          <div class="card medium-padding">
+            <div class="inline-field">
+              <p class="remove-margin">
+                ชื่อผู้รายงาน
+              </p>
+              <button
+                class="field-button"
+                @click="activePeopleSearchingFor(reporter)"
+              >
+                ${ reporter.id ? reporter.name:
+                "คลิกเพื่อเลือกผู้ให้ข้อมูลจากเมนูด้านขวา" }
+              </button>
+            </div>
           </div>
-        </div>
+        {% endif %}
 
         <div class="card medium-padding">
           <p class="card-subtitle remove-margin">

@@ -17,7 +17,7 @@
       <div class="menu-start">
         {% if request.user.profile %}
           <a href="{% url 'relation:relation_page' %}" class="menu-item">เพิ่มรายการคนสนิท</a>
-          <a href="" class="menu-item">เพิ่มกิจกรรมที่เข้าร่วม</a>
+          <a href="{% url 'relation:event_page' %}" class="menu-item">เพิ่มกิจกรรมที่เข้าร่วม</a>
         {% endif %}
       </div>
       <div class="menu-end">
