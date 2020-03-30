@@ -17,9 +17,8 @@ def index(request):
 @login_required
 @user_must_have_profile
 def relation_page(request):
-    context = dict()
-
     if request.method == 'GET':
+        context = dict()
         context['relation_level'] = RELATION_LEVELS
         
         return render(request, 'relation/relation.html', context=context)
