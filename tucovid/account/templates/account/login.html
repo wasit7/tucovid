@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% load static %} {% block body %}
 <div class="centered-container">
-  <div class="card mobile-card-borderless">
+  <div class="card medium-padding mobile-card-borderless">
     <div class="card-logo is-center">
       <img
         src="{% static 'Thammasat_main_logo.png' %}"
@@ -13,9 +13,9 @@
     <a class="button is-primary tu-button is-fullwidth margin-small-bottom" href="{% url 'social:begin' 'tu' %}">
       เข้าสู่ระบบด้วยรหัสธรรมศาสตร์
     </a>
-    <span class="card-helper">
+    <!-- <span class="card-helper">
       สำหรับข้อมูลเกี่ยวกับระบบเพิ่มเติม กรุณากดที่ <a href="">ลิ้งก์</a>
-    </span>
+    </span> -->
   </div>
 </div>
 {% endblock %}

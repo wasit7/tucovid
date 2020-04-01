@@ -7,10 +7,10 @@
 
   .card {
     min-width: -webkit-fill-available;
-    padding: 1rem;
   }
 
-  .navbar {
+  .navbar,
+  .card {
     padding: 1rem;
   }
 
@@ -24,10 +24,6 @@
     align-items: center;
     flex-grow: 1;
     justify-content: flex-end;
-  }
-
-  .navbar-menu {
-    display: none;
   }
 
   .navbar-menu.mobile {
@@ -58,7 +54,8 @@
     margin-top: 0.5rem;
   }
 
-  .mobile-hidden {
+  .mobile-hidden,
+  .navbar-menu {
     display: none;
   }
 
@@ -77,10 +74,7 @@
     font-size: 1.3rem;
   }
 
-  .margin-top {
-    margin-top: 1rem;
-  }
-
+  .margin-top,
   .card + .card {
     margin-top: 1rem;
   }

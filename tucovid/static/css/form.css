@@ -10,7 +10,6 @@
 .input {
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  outline: 0;
   border: 1px solid #dbdbdb;
 }
 
@@ -20,7 +19,7 @@
 
 .input:focus {
   border: 1px solid #3273dc;
-  box-shadow: 0 0 0 0.125rem rgba(50, 115, 220, .25);
+  box-shadow: 0 0 0 0.125rem rgba(50, 115, 220, 0.25);
 }
 
 input[type="text"]::placeholder,
@@ -50,10 +49,19 @@ input[type="text"]:hover::placeholder,
   margin-top: 0.75rem;
 }
 
-.inline-input {
-  padding: 0.125rem 0.75rem;
+.inline-input,
+.field-button,
+.inline-textarea,
+.button,
+.icon-button {
   border: none;
   outline: none;
+}
+
+.inline-input,
+.field-button,
+.inline-textarea {
+  padding: 0.125rem 0.75rem;
   border-bottom: 1px solid #bdbdbd;
 }
 
@@ -72,9 +80,6 @@ input[type="text"]:hover::placeholder,
   color: #bdbdbd;
   text-align: left;
   background-color: transparent;
-  border: none;
-  padding: 0.125rem 0.75rem;
-  border-bottom: 1px solid #bdbdbd;
   cursor: pointer;
   flex-grow: 1;
 }
@@ -86,8 +91,6 @@ input[type="text"]:hover::placeholder,
 
 .field-button:focus {
   color: #c3002f;
-  border: none;
-  outline: none;
   border-bottom: 1px solid #c3002f;
 }
 
@@ -103,17 +106,12 @@ input[type="text"]:hover::placeholder,
 
 .inline-textarea {
   height: 1.5rem;
-  border: none;
-  outline: none;
-  padding: 0.125rem 0.75rem;
-  border-bottom: 1px solid #dbdbdb;
   resize: none;
 }
 
 .participants {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
 }
 
 .participant {
@@ -123,10 +121,8 @@ input[type="text"]:hover::placeholder,
   align-items: center;
 }
 
-.participant > .title {
-  flex-grow: 1;
-}
-
-.inline-field > :last-child {
+.inline-field > :last-child,
+.participant > .title,
+.participants {
   flex-grow: 1;
 }

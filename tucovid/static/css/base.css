@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css?family=Kanit&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Kanit&display=swap");
 
 *:not(i) {
-  font-family: 'Kanit', 'san-serif';
+  font-family: "Kanit", "san-serif";
 }
 
 body {
@@ -10,14 +10,12 @@ body {
 }
 
 .centered-container {
-  display: flex;
   height: 100%;
   width: 100%;
-  justify-content: center;
-  align-items: center;
 }
 
-.container {
+.container,
+.centered-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,7 +26,6 @@ body {
   background: #ffffff;
   box-shadow: 0px 0.125rem 0.25rem rgba(0, 0, 0, 0.29);
   border-radius: 4px;
-  padding: 2.5rem;
   min-width: 480px;
 }
 
@@ -36,15 +33,21 @@ body {
   text-align: center;
 }
 
-.card-title {
-  font-size: 1.5rem;
-  font-weight: normal;
+.card-title,
+.card-subtitle {
   margin: 0.75rem;
 }
 
-.card-subtitle {
+.card-title,
+.suggestion-title,
+.event-title {
+  font-size: 1.5rem;
+  font-weight: normal;
+}
+
+.card-subtitle,
+.phone-no {
   font-size: 0.875rem;
-  margin: 0.75rem;
 }
 
 .card-helper {
@@ -52,8 +55,6 @@ body {
 }
 
 .button {
-  outline: none;
-  border: none;
   border-radius: 4px;
   padding: 0.5rem;
   box-shadow: 0px 0.125rem 0.25rem rgba(0, 0, 0, 0.29);
@@ -71,15 +72,15 @@ body {
 }
 
 .margin-small-bottom {
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 .medium-padding {
   padding: 1.75rem;
 }
 
-.small-padding {
-  padding: 1rem;
+.margin-small-top {
+  margin-top: 1rem;
 }
 
 .margin-top {
@@ -106,7 +107,6 @@ body {
 
 .columns {
   display: flex;
-  flex-grow: 1;
 }
 
 .column + .column {
@@ -129,24 +129,10 @@ body {
   min-width: auto;
 }
 
-.suggestion-title {
-  font-size: 1.5rem;
-  color: #848484;
-  font-weight: normal;
-  margin: 0;
-}
-
-.suggestions {
-  margin-top: 1rem;
-}
-
-.suggestion + .suggestion {
-  margin-top: 1rem;
-}
-
+.suggestion-title,
 .phone-no {
   color: #848484;
-  font-size: 0.875rem;
+  margin: 0;
 }
 
 .helper {
@@ -158,7 +144,8 @@ body {
 }
 
 .suggestion:hover > .suggestion-title,
-.suggestion:hover > .phone-no {
+.suggestion:hover > .phone-no,
+.event-title {
   color: #d3103f;
 }
 
@@ -166,39 +153,27 @@ body {
   margin-top: 1.5rem;
 }
 
-.card.small-padding + .card.small-padding {
-  margin-top: 1rem;
-}
-
 .friend,
-.event-detail {
+.event-detail,
+.columns {
   flex-grow: 1;
 }
 
 .datetime-grid {
   width: 78%;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) auto repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr)) auto repeat(
+      2,
+      minmax(0, 1fr)
+    );
   grid-column-gap: 0.5rem;
 }
 
 .icon-button {
-  border: none;
-  outline: none;
   background-color: transparent;
   font-size: 1.25rem;
   color: #848484;
   cursor: pointer;
-}
-
-.event-title {
-  font-size: 1.5rem;
-  color: #d3103f;
-}
-
-.navbar-menu {
-  flex-grow: 1;
-  display: flex;
 }
 
 .hamburger,

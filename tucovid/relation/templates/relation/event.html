@@ -200,13 +200,13 @@
             :disabled="!isPeopleSearchingActive"
           />
           <div
-            class="suggestions"
+            class="suggestions margin-top"
             v-if="isSuggestionDelay && searchingText.length >= 3"
           >
             <p class="helper remove-margin">กำลังค้นหา</p>
           </div>
           <div
-            class="suggestions"
+            class="suggestions margin-top"
             v-if="!isSuggestionDelay && searchingText.length >= 3"
           >
             <div v-if="!suggestions.length">
@@ -214,7 +214,7 @@
             </div>
             <div
               v-else
-              class="suggestion"
+              class="suggestion margin-top"
               v-for="suggestion in suggestions"
               :key="suggestion.id"
               @click="selectSuggestion(suggestion)"
