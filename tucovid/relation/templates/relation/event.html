@@ -395,7 +395,7 @@
         );
       },
       async getEventHistory() {
-        const response = await axios.get(`history/${this.reporter.id}/`);
+        const response = await axios.get(`/api/v1/users/${this.reporter.id}/events/`);
 
         return response;
       },

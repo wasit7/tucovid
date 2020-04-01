@@ -224,7 +224,7 @@
         this.searchingText = "";
       },
       async getRelationHistory() {
-        const response = await axios.get(`history/${this.reporter.id}/`);
+        const response = await axios.get(`/api/v1/users/${this.reporter.id}/relationships/`);
 
         return response;
       },
