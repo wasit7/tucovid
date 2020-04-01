@@ -23,6 +23,7 @@ urlpatterns = [
     path('oauth/', include('social_django.urls', namespace='social')),
     path('account/', include('account.urls', namespace='account')),
     path('', include('relation.urls', namespace='relation')),
+    path('api/v1/', include('account.api.routers')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
