@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'relation',
     'social_django',
     'tuauth',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
