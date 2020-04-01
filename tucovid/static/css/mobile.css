@@ -53,4 +53,81 @@
     margin-left: 0;
     margin-top: 0.5rem;
   }
+
+  .mobile-hidden {
+    display: none;
+  }
+
+  .is-mobile-full {
+    width: 100% !important;
+  }
+
+  .content {
+    width: calc(100% - 3rem) !important;
+    padding: 1.5rem;
+  }
+
+  .content > .title-block,
+  .history > .title-block {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+  }
+
+  .margin-top {
+    margin-top: 1rem;
+  }
+
+  .card + .card {
+    margin-top: 0.5rem;
+  }
+
+  .medium-padding {
+    padding: 0.5rem 0;
+  }
+
+  .inline-field {
+    flex-direction: column;
+  }
+
+  .inline-field > :first-child {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .mobile-only {
+    display: block;
+  }
+
+  .mobile-modal {
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.29);
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    display: none;
+  }
+
+  .mobile-modal.is-modal-active {
+    display: block;
+    margin-left: 0;
+  }
+
+  .mobile-modal > .card {
+    margin: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .history-card > .inline-field {
+    flex-direction: row;
+  }
+
+  .history-card > .inline-field > :first-child {
+    width: 30%;
+  }
+
+  .card.history-card {
+    padding: 0.5rem 0;
+  }
 }

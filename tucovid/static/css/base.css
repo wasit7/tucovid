@@ -201,6 +201,11 @@ body {
   display: flex;
 }
 
-.hamburger {
+.hamburger,
+.mobile-only {
   display: none;
+}
+
+.history-card {
+  padding: 1.5rem;
 }
