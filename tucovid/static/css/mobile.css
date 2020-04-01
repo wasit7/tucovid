@@ -1,9 +1,13 @@
 @media only screen and (max-width: 768px) {
-  .card {
-    min-width: -webkit-fill-available;
+  .card.mobile-card-borderless {
     background-color: #fafafa;
     box-shadow: none;
     padding: 1.5rem;
+  }
+
+  .card {
+    min-width: -webkit-fill-available;
+    padding: 1rem;
   }
 
   .navbar {
@@ -70,7 +74,7 @@
   .content > .title-block,
   .history > .title-block {
     margin: 0 0 0.5rem 0;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
   }
 
   .margin-top {
@@ -78,18 +82,14 @@
   }
 
   .card + .card {
-    margin-top: 0.5rem;
-  }
-
-  .medium-padding {
-    padding: 0.5rem 0;
+    margin-top: 1rem;
   }
 
   .inline-field {
     flex-direction: column;
   }
 
-  .inline-field > :first-child {
+  .card:not(.history-card) > .inline-field > :first-child {
     width: 100%;
     margin-bottom: 0.5rem;
   }
@@ -125,10 +125,6 @@
 
   .history-card > .inline-field > :first-child {
     width: 30%;
-  }
-
-  .card.history-card {
-    padding: 0.5rem 0;
   }
 
   .datetime-grid {
