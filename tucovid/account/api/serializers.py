@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from account.models import Profile
 
 class UserSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField()
@@ -23,3 +24,18 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_extra_attribute(self, obj):
         return obj.profile.extra_attribute
+
+class ProfileSerializer(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Profile
+        fields = [
+            'id',
+            'full_name',
+            'phone_no',
+            'extra_attribute'
+        ]
+
+    def get_id(self, obj):
+        return obj.user.pk

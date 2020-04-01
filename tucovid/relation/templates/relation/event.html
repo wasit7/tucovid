@@ -360,7 +360,7 @@
         peopleSearching.focus();
       },
       async searchPeople(keyword) {
-        const response = await axios.post("/account/event/search/", {
+        const response = await axios.post("/api/v1/users/event/search/", {
           keyword,
           excluding_ids: this.excludingProfile
         });

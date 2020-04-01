@@ -203,7 +203,7 @@
         peopleSearching.focus();
       },
       async searchPeople(keyword) {
-        const response = await axios.post("/account/relation/search/", {
+        const response = await axios.post("/api/v1/users/relation/search/", {
           keyword,
           reporter_id:
             this.reporter.id == this.peopleSearchingTarget.id
