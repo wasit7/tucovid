@@ -130,4 +130,15 @@
   .card.history-card {
     padding: 0.5rem 0;
   }
+
+  .datetime-grid {
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: 3;
+  }
+
+  .datetime-grid > p {
+    grid-column: 1 / 3;
+    text-align: center;
+  }
 }
