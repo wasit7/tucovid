@@ -1,11 +1,11 @@
-from relation.models import Relationship
+from relation.models import Relationship, Event
 from rest_framework import serializers
-from account.api.serializers import ProfileSerializer
-from django.db.models import F
+from account.api.serializers import UserSerializer
 
 class RelationshipSerializer(serializers.ModelSerializer):
-    persons = serializers.SerializerMethodField()
+    persons = UserSerializer(many=True)
     level = serializers.SerializerMethodField()
+    created_by = UserSerializer()
 
     class Meta:
         model = Relationship
@@ -16,15 +16,23 @@ class RelationshipSerializer(serializers.ModelSerializer):
             'created_by'
         ]
 
-    def get_persons(self, obj):
-        persons = obj.persons.all()
-        profiles = [ person.profile.__dict__ for person in persons ]
-        serializer = ProfileSerializer(data=profiles, many=True)
-
-        if serializer.is_valid():
-            return serializer.data
-        else:
-            return []
-
     def get_level(self, obj):
         return obj.get_level_display()
+
+class EventSerializer(serializers.ModelSerializer):
+    reporter = UserSerializer()
+    participants = UserSerializer(many=True)
+    created_by = UserSerializer()
+
+    class Meta:
+        model = Event
+        fields = [
+            'title',
+            'start',
+            'finish',
+            'location',
+            'reporter',
+            'participants',
+            'created_date',
+            'created_by'
+        ]
