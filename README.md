@@ -10,4 +10,6 @@ We designed this system by AdobeXD ([link](https://xd.adobe.com/view/71bbb0c4-bd
     - [x] Profile and Profile flow
     - [x] Create Relationship
     - [x] Profile link in suggestion
-    - [ ] Create Joined Event
+    - [x] Create Joined Event
+    - [x] Support Responsive
+    - [ ] Data API
