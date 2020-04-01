@@ -15,7 +15,7 @@
       <p class="remove-margin">ปรับปรุงรายการกิจกรรมที่เข้าร่วม</p>
     </div>
     <div class="columns margin-top">
-      <div class="column is-3-5">
+      <div class="column is-3-5 is-mobile-full">
         {% if request.user.is_staff %}
           <div class="card medium-padding">
             <div class="inline-field">
@@ -144,7 +144,7 @@
             </p>
           </div>
           <div
-            class="card small-padding"
+            class="card history-card"
             v-for="event in eventHistory"
             :key="event.id"
           >
@@ -181,8 +181,12 @@
         </div>
       </div>
 
-      <div class="column is-2-5">
-        <div class="card remove-min-width medium-padding">
+      <div
+      
+      class="column is-2-5 is-mobile-full mobile-modal"
+      @click="closePeopleSearchingModal"
+      :class="{ 'is-modal-active': isPeopleSearchingActive }">
+        <div class="card remove-min-width medium-padding" @click.stop>
           <label for="people_searching" class="label"
             >ค้นหาบุคคล (กรุณาเลือกฟิลด์ที่ต้องการใส่ข้อมูลก่อน)</label
           >
@@ -196,13 +200,13 @@
             :disabled="!isPeopleSearchingActive"
           />
           <div
-            class="suggestions"
+            class="suggestions margin-top"
             v-if="isSuggestionDelay && searchingText.length >= 3"
           >
             <p class="helper remove-margin">กำลังค้นหา</p>
           </div>
           <div
-            class="suggestions"
+            class="suggestions margin-top"
             v-if="!isSuggestionDelay && searchingText.length >= 3"
           >
             <div v-if="!suggestions.length">
@@ -210,7 +214,7 @@
             </div>
             <div
               v-else
-              class="suggestion"
+              class="suggestion margin-top"
               v-for="suggestion in suggestions"
               :key="suggestion.id"
               @click="selectSuggestion(suggestion)"
@@ -375,6 +379,7 @@
         }
 
         this.clearSuggestions();
+        this.closePeopleSearchingModal();
       },
       clearSuggestions() {
         this.suggestions = [];
@@ -429,6 +434,9 @@
           location: null,
           participants: []
         };
+      },
+      closePeopleSearchingModal() {
+        this.isPeopleSearchingActive = false;
       }
     },
     watch: {
