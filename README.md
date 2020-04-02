@@ -52,6 +52,7 @@ We designed this system by AdobeXD ([link](https://xd.adobe.com/view/71bbb0c4-bd
 ```
 
 ```json
+datetime use UTC+7
 [
   {
     "persons": [
@@ -73,7 +74,7 @@ We designed this system by AdobeXD ([link](https://xd.adobe.com/view/71bbb0c4-bd
       }
     ],
     "level": "เพื่อนร่วมงาน/เพื่อนร่วมชั้น",
-    "created_date": "2020-03-30T15:08:48.238602", // UTC + 07:00
+    "created_date": "2020-03-30T15:08:48.238602",
     "created_by": {
       "id": 1,
       "full_name": "อาจารย์วสิศ ลิ้มประเสริฐ",
@@ -93,12 +94,13 @@ We designed this system by AdobeXD ([link](https://xd.adobe.com/view/71bbb0c4-bd
 ```
 
 ```json
+datetime use UTC+7
 [
   {
     "title": "ประชุมงาน TU Covid",
-    "start": "2020-03-27T14:00:00", // UTC + 07:00
-    "finish": "2020-03-27T17:00:00", // UTC + 07:00
-    "location": "video conference from ........", // Free text
+    "start": "2020-03-27T14:00:00",
+    "finish": "2020-03-27T17:00:00",
+    "location": "video conference from ........",
     "reporter": {
       "id": 1,
       "full_name": "อาจารย์วสิศ ลิ้มประเสริฐ",
@@ -117,7 +119,7 @@ We designed this system by AdobeXD ([link](https://xd.adobe.com/view/71bbb0c4-bd
         }
       }
     ],
-    "created_date": "2020-03-27T20:00:00", // UTC + 07:00
+    "created_date": "2020-03-27T20:00:00",
     "created_by": {
       "id": 1,
       "full_name": "อาจารย์วสิศ ลิ้มประเสริฐ",
