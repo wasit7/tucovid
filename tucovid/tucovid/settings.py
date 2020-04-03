@@ -20,12 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'dkcz86@+y(*#l4w6@r6)3(!l$q43^^olz-(no_!2&-%5dv!1qa'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'dkcz86@+y(*#l4w6@r6)3(!l$q43^^olz-(no_!2&-%5dv!1qa')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['detect.service.sci.tu.ac.th']
 
 
 # Application definition
@@ -155,3 +155,5 @@ STATICFILES_DIRS = [
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'relation:index'
 SOCIAL_AUTH_LOGIN_ERROR_URL = 'relation:index'
 LOGIN_URL = 'account:login_page'
+
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
