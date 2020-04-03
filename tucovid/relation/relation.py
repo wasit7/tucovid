@@ -4,7 +4,7 @@ from datetime import datetime
 from relation.datasources import map_relation, map_event
 
 def create_relation_record(user, data):
-    reporter_id = data['reporter_id'] if user.is_staff else user
+    reporter_id = data['reporter_id'] if user.is_staff else user.pk
     reporter = User.objects.get(pk=reporter_id)
     friend = User.objects.get(pk=data['friend_id'])
 
@@ -18,7 +18,7 @@ def create_relation_record(user, data):
     return map_relation(relation, reporter)
 
 def create_event_record(user, data):
-    reporter_id = data['reporter_id'] if user.is_staff else user
+    reporter_id = data['reporter_id'] if user.is_staff else user.pk
 
     reporter = User.objects.get(pk=reporter_id)
     participants = User.objects.filter(pk__in=data['participants'])
