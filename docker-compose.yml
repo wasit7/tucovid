@@ -1,19 +1,38 @@
-version: '3.3'
-
+version: '3'
 services:
-  db:
-    image: postgres:12.2-alpine
-    env_file:
-      - .env.development
+  tucovid-db:
+    image: postgres:11.3-alpine
+    container_name: tucovid-db
+    env_file: .env.production
+    volumes:
+    - /home/kubelab/data/tucovid_data:/var/lib/postgresql/data
+    networks:
+    - internal
+    labels:
+    - traefik.enable=false
+    restart: always
 
-  web:
+  tucovid-django:
     build: ./tucovid
     command: sh /tucovid/runserver.sh
-    volumes:
-      - ./tucovid:/tucovid
-    ports:
-      - "8000:8000"
+    container_name: tucovid-django
+    env_file: .env.production
     depends_on:
-      - db
-    env_file:
-      - .env.development
+    - tucovid-db
+    labels:
+    - traefik.backend=tucovid-django
+    - traefik.docker.network=proxy
+    - traefik.frontend.rule=Host:detect.service.sci.tu.ac.th;PathPrefix:/
+    - traefik.port=8000
+    networks:
+    - internal
+    - proxy
+    restart: always
+    volumes:
+    - ./tucovid:/tucovid
+
+networks:
+  internal:
+    external: false
+  proxy:
+    external: true
