@@ -34,18 +34,3 @@ class UserSerializer(serializers.ModelSerializer):
             return obj.profile.extra_attribute
 
         return None
-
-class ProfileSerializer(serializers.ModelSerializer):
-    id = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Profile
-        fields = [
-            'id',
-            'full_name',
-            'phone_no',
-            'extra_attribute'
-        ]
-
-    def get_id(self, obj):
-        return obj.user.pk
