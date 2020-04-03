@@ -11,19 +11,29 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id',
+            'username',
             'full_name',
             'phone_no',
             'extra_attribute'
         ]
 
     def get_full_name(self, obj):
-        return obj.profile.full_name
+        if hasattr(obj, 'profile'):
+            return obj.profile.full_name
+
+        return None
 
     def get_phone_no(self, obj):
-        return obj.profile.phone_no
+        if hasattr(obj, 'profile'):
+            return obj.profile.phone_no
+
+        return None
 
     def get_extra_attribute(self, obj):
-        return obj.profile.extra_attribute
+        if hasattr(obj, 'profile'):
+            return obj.profile.extra_attribute
+
+        return None
 
 class ProfileSerializer(serializers.ModelSerializer):
     id = serializers.SerializerMethodField()
