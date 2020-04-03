@@ -5,7 +5,7 @@ services:
     container_name: tucovid-db
     env_file: .env.production
     volumes:
-    - /home/kubelab/data/tucovid_data:/var/lib/postgresql/data
+    - ./volumes/tucovid_data:/var/lib/postgresql/data
     networks:
     - internal
     labels:
@@ -30,6 +30,25 @@ services:
     restart: always
     volumes:
     - ./tucovid:/tucovid
+
+  tucovid-nginx:
+    image: nginx:alpine
+    container_name: tucovid-nginx
+    volumes:
+    - ./volume/static:/usr/share/nginx/html/static
+    - ./volume/media:/usr/share/nginx/html/media
+    networks:
+    - internal
+    - proxy
+    labels:
+    - traefik.backend=unisat-nginx
+    - traefik.docker.network=proxy
+    - traefik.enable=true
+    - traefik.frontend.rule=Host:detect.service.sci.tu.ac.th;PathPrefix:/static/,/media/
+    - traefik.port=80
+    depends_on:
+    - tucovid-django
+    restart: always
 
 networks:
   internal:
