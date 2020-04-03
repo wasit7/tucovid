@@ -4,7 +4,7 @@ from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from account.api.serializers import UserSerializer, ProfileSerializer
+from account.api.serializers import UserSerializer
 from account.profile import search_profile
 from relation.models import Relationship
 from django.forms.models import model_to_dict
@@ -33,8 +33,8 @@ class RelationProfileSearchAPI(APIView):
         if request.data['reporter_id'] and not reporter_id:
             reporter_id = request.data['reporter_id']
 
-        response = [
-            model_to_dict(profile)
+        profiles = [
+            profile
             for profile in profiles.exclude(user__pk=reporter_id)
             if not Relationship.objects \
                 .filter(persons__pk=reporter_id) \
@@ -42,13 +42,14 @@ class RelationProfileSearchAPI(APIView):
                 .exists()
         ]
 
-        serializer = ProfileSerializer(data=response, many=True)
-
-        if serializer.is_valid(raise_exception=True):
-            return Response(response)
-
-        else:
-            return Response()
+        return Response([
+            {
+                'id': profile.user.pk,
+                'full_name': profile.full_name,
+                'phone_no': profile.phone_no,
+                'extra_attribute': profile.extra_attribute
+            } for profile in profiles
+        ])
 
 class EventProfileSearchAPI(APIView):
     permission_classes = [IsAuthenticated]
@@ -65,12 +66,11 @@ class EventProfileSearchAPI(APIView):
         if request.data['excluding_ids']:
             excluding_ids += request.data['excluding_ids']
 
-        response = [ model_to_dict(profile) for profile in profiles.exclude(user__pk__in=excluding_ids) ]
-
-        serializer = ProfileSerializer(data=response, many=True)
-
-        if serializer.is_valid(raise_exception=True):
-            return Response(response)
-
-        else:
-            return Response()
+        return Response([
+            {
+                'id': profile.user.pk,
+                'full_name': profile.full_name,
+                'phone_no': profile.phone_no,
+                'extra_attribute': profile.extra_attribute
+            } for profile in profiles.exclude(user__pk__in=excluding_ids)
+        ])
