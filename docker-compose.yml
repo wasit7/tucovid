@@ -30,6 +30,8 @@ services:
     restart: always
     volumes:
     - ./tucovid:/tucovid
+    - ./volume/static:/static
+    - ./volume/media:/media
 
   tucovid-nginx:
     image: nginx:alpine
