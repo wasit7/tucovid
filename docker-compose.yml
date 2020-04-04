@@ -30,15 +30,15 @@ services:
     restart: always
     volumes:
     - ./tucovid:/tucovid
-    - ./volume/static:/static
-    - ./volume/media:/media
+    - ./volumes/static:/static
+    - ./volumes/media:/media
 
   tucovid-nginx:
     image: nginx:alpine
     container_name: tucovid-nginx
     volumes:
-    - ./volume/static:/usr/share/nginx/html/static
-    - ./volume/media:/usr/share/nginx/html/media
+    - ./volumes/static:/usr/share/nginx/html/static
+    - ./volumes/media:/usr/share/nginx/html/media
     networks:
     - internal
     - proxy
