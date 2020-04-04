@@ -43,7 +43,7 @@ services:
     - internal
     - proxy
     labels:
-    - traefik.backend=unisat-nginx
+    - traefik.backend=tucovid-nginx
     - traefik.docker.network=proxy
     - traefik.enable=true
     - traefik.frontend.rule=Host:detect.service.sci.tu.ac.th;PathPrefix:/static/,/media/
