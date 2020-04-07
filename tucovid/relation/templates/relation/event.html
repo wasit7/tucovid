@@ -17,20 +17,20 @@
     <div class="columns margin-top">
       <div class="column is-3-5 is-mobile-full">
         {% if request.user.is_staff %}
-          <div class="card medium-padding">
-            <div class="inline-field">
-              <p class="remove-margin">
-                ชื่อผู้รายงาน
-              </p>
-              <button
-                class="field-button"
-                @click="activePeopleSearchingFor(reporter)"
-              >
-                ${ reporter.id ? reporter.name:
-                "คลิกเพื่อเลือกผู้ให้ข้อมูลจากเมนูด้านขวา" }
-              </button>
-            </div>
+        <div class="card medium-padding">
+          <div class="inline-field">
+            <p class="remove-margin">
+              ชื่อผู้รายงาน
+            </p>
+            <button
+              class="field-button"
+              @click="activePeopleSearchingFor(reporter)"
+            >
+              ${ reporter.id ? reporter.name:
+              "คลิกเพื่อเลือกผู้ให้ข้อมูลจากเมนูด้านขวา" }
+            </button>
           </div>
+        </div>
         {% endif %}
 
         <div class="card medium-padding">
@@ -76,6 +76,7 @@
                 class="inline-input"
                 placeholder="วันที่สิ้นสุด"
                 v-model="event.finish.date"
+                :min="event.start.date"
               />
               <input
                 type="time"
@@ -84,6 +85,7 @@
                 placeholder="เวลาสิ้นสุด"
                 v-model="event.finish.time"
                 step="60"
+                :min="event.start.date == event.finish.date ? event.start.time : ''"
               />
             </div>
           </div>
@@ -184,13 +186,14 @@
       </div>
 
       <div
-      
-      class="column is-2-5 is-mobile-full mobile-modal"
-      @click="closePeopleSearchingModal"
-      :class="{ 'is-modal-active': isPeopleSearchingActive }">
+        class="column is-2-5 is-mobile-full mobile-modal"
+        @click="closePeopleSearchingModal"
+        :class="{ 'is-modal-active': isPeopleSearchingActive }"
+      >
         <div class="card remove-min-width medium-padding" @click.stop>
           <label for="people_searching" class="label"
-            >ค้นหาบุคคล ${ isPeopleSearchingActive || peopleSearchingTarget ? "": "(กรุณาเลือกฟิลด์ที่ต้องการใส่ข้อมูลก่อน)" }</label
+            >ค้นหาบุคคล ${ isPeopleSearchingActive || peopleSearchingTarget ?
+            "": "(กรุณาเลือกฟิลด์ที่ต้องการใส่ข้อมูลก่อน)" }</label
           >
           <input
             type="text"
@@ -321,13 +324,26 @@
     },
     computed: {
       isSubmitButtonActive() {
-        return (
-          this.reporter.id &&
-          this.event.name &&
+        let isTimeCorrent = false;
+
+        if (
           this.event.start.date &&
           this.event.start.time &&
           this.event.finish.date &&
-          this.event.finish.time &&
+          this.event.finish.time
+        ) {
+          const startDate = new Date(`${this.event.start.date} ${this.event.start.time}`);
+          const finishDate = new Date(`${this.event.finish.date} ${this.event.finish.time}`);
+
+          if (startDate.getTime() >= finishDate.getTime()) {
+            isTimeCorrent = true; 
+          }
+        }
+
+        return (
+          this.reporter.id &&
+          this.event.name &&
+          isTimeCorrent &&
           this.event.location &&
           this.event.participants.length
         );
@@ -398,7 +414,9 @@
         );
       },
       async getEventHistory() {
-        const response = await axios.get(`/api/v1/users/${this.reporter.id}/events/`);
+        const response = await axios.get(
+          `/api/v1/users/${this.reporter.id}/events/`
+        );
 
         return response;
       },
@@ -440,6 +458,20 @@
       },
       closePeopleSearchingModal() {
         this.isPeopleSearchingActive = false;
+      },
+      setMinDate(target, value) {
+        if (!target) {
+          target = value;
+        } else {
+          const startDate = new Date(this.event.start.date);
+          const finishDate = new Date(this.event.finish.date);
+
+          if (startDate > finishDate) {
+            target = value;
+          }
+        }
+
+        return target;
       }
     },
     watch: {
@@ -462,9 +494,16 @@
         }
       },
       "event.start.date"(value) {
-        if (value && !this.event.finish.date) {
-          this.event.finish.date = value;
+        if (!value) {
+          return null;
         }
+        this.event.finish.date = this.setMinDate(this.event.finish.date, value);
+      },
+      "event.finish.date"(value) {
+        if (!value) {
+          return null;
+        }
+        this.event.start.date = this.setMinDate(this.event.start.date, value);
       }
     },
     filters: {
@@ -489,12 +528,31 @@
     dateFormat: "H:i",
     time_24hr: true,
     defaultHour: new Date().getHours(),
-    defaultMinute: new Date().getMinutes(),
+    defaultMinute: new Date().getMinutes()
   };
 
-  flatpickr("#start-date", {});
-  flatpickr("#start-time", flatTimePickerConfig);
-  flatpickr("#finish-date", {});
-  flatpickr("#finish-time", flatTimePickerConfig);
+  const finishDate = flatpickr("#finish-date");
+  const startTime = flatpickr("#start-time", flatTimePickerConfig);
+  const startDate = flatpickr("#start-date", {
+    onChange(dates, dateStr, instance) {
+      finishDate.config.minDate = dateStr;
+    }
+  });
+  const finishTime = flatpickr("#finish-time", {
+    ...flatTimePickerConfig,
+    onOpen(times, timeStr, instance) {
+      const { event } = app;
+      const { start, finish } = event;
+
+      if (start.date && finish.date && start.time) {
+        const startDate = new Date(start.date);
+        const finishDate = new Date(finish.date);
+
+        if (startDate.getTime() == finishDate.getTime()) {
+          instance.config.minTime = start.time;
+        }
+      }
+    }
+  });
 </script>
 {% endblock %}
