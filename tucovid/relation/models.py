@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import JSONField
 
 VERY_CLOSED = '01'
 HAVE_DISTANCE = '02'
@@ -29,7 +30,7 @@ class Event(models.Model):
     title = models.CharField(max_length=255)
     start = models.DateTimeField()
     finish = models.DateTimeField()
-    location = models.TextField()
+    location = JSONField(default=dict)
     reporter = models.ForeignKey(User, on_delete=models.PROTECT, related_name='event_reporter')
     participants = models.ManyToManyField(User, related_name='participant')
     created_date = models.DateTimeField(auto_now=True)

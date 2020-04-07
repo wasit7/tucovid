@@ -94,12 +94,7 @@
             <p class="remove-margin">
               สถานที่
             </p>
-            <textarea
-              class="inline-textarea"
-              id="location"
-              placeholder="สถานที่ที่จัดกิจกรรม"
-              v-model="event.location"
-            ></textarea>
+            <div id="map"></div>
           </div>
 
           <div class="inline-field">
@@ -141,7 +136,7 @@
           </button>
         </div>
 
-        <div class="history margin-top" v-if="eventHistory.length">
+        <div class="history margin-top margin-small-bottom" v-if="eventHistory.length">
           <div class="title-block">
             <p class="remove-margin">
               รายการกิจกรรมที่เกี่ยวข้องของ ${ reporter.name }
@@ -165,7 +160,7 @@
             <div class="inline-field">
               <p class="helper remove-margin">สถานที่</p>
               <p class="remove-margin event-detail">
-                ${ event.location }
+                ${ event.location.lat }, ${ event.location.lng }
               </p>
             </div>
             <div class="inline-field">
@@ -203,10 +198,7 @@
             v-model="searchingText"
             :disabled="!isPeopleSearchingActive"
           />
-          <div
-            class="suggestions margin-top"
-            v-if="isSuggestionDelay"
-          >
+          <div class="suggestions margin-top" v-if="isSuggestionDelay">
             <p class="helper remove-margin">กำลังค้นหา</p>
           </div>
           <div
@@ -331,11 +323,15 @@
           this.event.finish.date &&
           this.event.finish.time
         ) {
-          const startDate = new Date(`${this.event.start.date} ${this.event.start.time}`);
-          const finishDate = new Date(`${this.event.finish.date} ${this.event.finish.time}`);
+          const startDate = new Date(
+            `${this.event.start.date} ${this.event.start.time}`
+          );
+          const finishDate = new Date(
+            `${this.event.finish.date} ${this.event.finish.time}`
+          );
 
           if (startDate.getTime() >= finishDate.getTime()) {
-            isTimeCorrent = true; 
+            isTimeCorrent = true;
           }
         }
 
@@ -556,5 +552,43 @@
       }
     }
   });
+</script>
+<!-- for render map -->
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFf6vjKoyWv-sDtuZWc05UXOLDkNs4Cqk&callback=initMap"
+  async
+  defer
+></script>
+<script>
+  let map = null;
+  let marker = null;
+  const BKK_LAT_LONG = { lat: 13.736717, lng: 100.523186 };
+
+  function initMap() {
+    const mapElement = document.querySelector("#map");
+
+    map = new google.maps.Map(mapElement, {
+      zoom: 8,
+      center: BKK_LAT_LONG,
+      gestureHandling: 'greedy'
+    });
+
+    map.addListener("click", e => {
+      placeMarkerAndPanTo(e.latLng, map);
+    });
+  }
+
+  function placeMarkerAndPanTo(latLng, map) {
+    if (marker) {
+      marker.setMap(null);
+    }
+
+    marker = new google.maps.Marker({
+      position: latLng,
+      map: map
+    });
+    map.panTo(latLng);
+    app.event.location = latLng;
+  }
 </script>
 {% endblock %}

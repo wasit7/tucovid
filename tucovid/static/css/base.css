@@ -184,3 +184,7 @@ body {
 .history-card {
   padding: 1.5rem;
 }
+
+#map {
+  height: 350px;
+}
