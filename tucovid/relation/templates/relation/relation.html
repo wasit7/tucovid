@@ -90,7 +90,7 @@
       >
         <div class="card remove-min-width medium-padding" @click.stop>
           <label for="people_searching" class="label"
-            >ค้นหาบุคคล ${ isPeopleSearchingActive || peopleSearchingTarget ? "": "(กรุณาเลือกฟิลด์ที่ต้องการใส่ข้อมูลก่อน)" }</label
+            >ค้นหาบุคคล (กรุณาเลือกฟิลด์ที่ต้องการใส่ข้อมูลก่อน)</label
           >
           <input
             type="text"
@@ -100,7 +100,7 @@
             name="people_searching"
             placeholder="ค้นหาบุคคล"
             v-model="searchingText"
-            :disabled="isPeopleSearchingActive && peopleSearchingTarget"
+            :disabled="!isPeopleSearchingActive"
           />
           <div
             class="suggestions margin-top"
@@ -176,7 +176,7 @@
       this.initReporter();
 
       if (!this.isStaff && !this.isMobile) {
-        this.activePeopleSearchingForOnlyFriend();
+        this.activePeopleSearchingFor(this.friend);
       }
     },
     computed: {
@@ -211,11 +211,6 @@
           this.reporter.name = "{{ request.user.profile.full_name }}";
           this.reporter.id = "{{ request.user.pk }}";
         }
-      },
-      async activePeopleSearchingForOnlyFriend() {
-        this.peopleSearchingTarget = this.friend;
-        this.isPeopleSearchingActive = true;
-        this.clearSuggestions();
       },
       async activePeopleSearchingFor(target) {
         this.peopleSearchingTarget = target;
