@@ -55,33 +55,35 @@
             </p>
             <div class="datetime-grid">
               <input
-                type="text"
+                type="date"
                 class="inline-input"
                 id="start-date"
                 placeholder="วันที่เริ่ม"
                 v-model="event.start.date"
               />
               <input
-                type="text"
+                type="time"
                 class="inline-input"
                 id="start-time"
                 placeholder="เวลาเริ่ม"
                 v-model="event.start.time"
+                step="60"
               />
               <p class="remove-margin">-</p>
               <input
-                type="text"
+                type="date"
                 id="finish-date"
                 class="inline-input"
                 placeholder="วันที่สิ้นสุด"
                 v-model="event.finish.date"
               />
               <input
-                type="text"
+                type="time"
                 id="finish-time"
                 class="inline-input"
                 placeholder="เวลาสิ้นสุด"
                 v-model="event.finish.time"
+                step="60"
               />
             </div>
           </div>
