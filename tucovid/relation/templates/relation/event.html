@@ -205,13 +205,13 @@
           />
           <div
             class="suggestions margin-top"
-            v-if="isSuggestionDelay && searchingText.length >= 3"
+            v-if="isSuggestionDelay"
           >
             <p class="helper remove-margin">กำลังค้นหา</p>
           </div>
           <div
             class="suggestions margin-top"
-            v-if="!isSuggestionDelay && searchingText.length >= 3"
+            v-if="!isSuggestionDelay && isPeopleSearchingActive"
           >
             <div v-if="!suggestions.length">
               <p class="remove-margin">ไม่พบบุคคลที่ใกล้เคียง</p>
@@ -376,6 +376,7 @@
           "#people_searching"
         );
         peopleSearching.focus();
+        this.renderSuggestionForKeyword("");
       },
       async searchPeople(keyword) {
         const response = await axios.post("/api/v1/users/event/search/", {
@@ -384,6 +385,11 @@
         });
 
         return response;
+      },
+      async renderSuggestionForKeyword(keyword) {
+        const response = await this.searchPeople(keyword);
+        const { data } = response;
+        this.suggestions = data;
       },
       selectSuggestion({ id, full_name }) {
         if (Array.isArray(this.peopleSearchingTarget)) {
@@ -474,14 +480,11 @@
       }
     },
     watch: {
-      async searchingText(value) {
-        if (value && value.length >= 3) {
+      searchingText(value) {
+        if (value) {
           this.isSuggestionDelay = true;
-          setTimeout(() => (this.isSuggestionDelay = false), 400);
-
-          const response = await this.searchPeople(value);
-          const { data } = response;
-          this.suggestions = data;
+          setTimeout(() => (this.isSuggestionDelay = false), 250);
+          this.renderSuggestionForKeyword(value);
         }
       },
       async "reporter.id"(value) {

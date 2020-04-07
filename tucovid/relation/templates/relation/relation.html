@@ -104,13 +104,13 @@
           />
           <div
             class="suggestions margin-top"
-            v-if="isSuggestionDelay && searchingText.length >= 3"
+            v-if="isSuggestionDelay"
           >
             <p class="helper remove-margin">กำลังค้นหา</p>
           </div>
           <div
             class="suggestions margin-top"
-            v-if="!isSuggestionDelay && searchingText.length >= 3"
+            v-if="!isSuggestionDelay"
           >
             <div v-if="!suggestions.length">
               <p class="remove-margin">ไม่พบบุคคลที่ใกล้เคียง</p>
@@ -220,6 +220,7 @@
           "#people_searching"
         );
         peopleSearching.focus();
+        this.renderSuggestionFor("");
       },
       async searchPeople(keyword) {
         const response = await axios.post("/api/v1/users/relation/search/", {
@@ -231,6 +232,11 @@
         });
 
         return response;
+      },
+      async renderSuggestionFor(keyword) {
+        const response = await this.searchPeople(keyword);
+        const { data } = response;
+        this.suggestions = data;
       },
       selectSuggestion({ id, full_name }) {
         this.peopleSearchingTarget.id = id;
@@ -281,13 +287,10 @@
     },
     watch: {
       async searchingText(value) {
-        if (value && value.length >= 3) {
+        if (value) {
           this.isSuggestionDelay = true;
-          setTimeout(() => (this.isSuggestionDelay = false), 400);
-
-          const response = await this.searchPeople(value);
-          const { data } = response;
-          this.suggestions = data;
+          setTimeout(() => (this.isSuggestionDelay = false), 150);
+          this.renderSuggestionFor(value);
         }
       },
       async "reporter.id"(value) {
