@@ -174,6 +174,10 @@
     },
     created() {
       this.initReporter();
+
+      if (!this.isStaff && !this.isMobile) {
+        this.activePeopleSearchingForOnlyFriend();
+      }
     },
     computed: {
       isSubmitButtonActive() {
@@ -181,6 +185,21 @@
       },
       isStaff() {
         return "{{ request.user.is_staff }}" == "True";
+      },
+      isMobile() {
+        const toMatch = [
+          /Android/i,
+          /webOS/i,
+          /iPhone/i,
+          /iPad/i,
+          /iPod/i,
+          /BlackBerry/i,
+          /Windows Phone/i
+        ];
+
+        return toMatch.some(toMatchItem => {
+          return navigator.userAgent.match(toMatchItem);
+        });
       }
     },
     methods: {
@@ -192,6 +211,11 @@
           this.reporter.name = "{{ request.user.profile.full_name }}";
           this.reporter.id = "{{ request.user.pk }}";
         }
+      },
+      async activePeopleSearchingForOnlyFriend() {
+        this.peopleSearchingTarget = this.friend;
+        this.isPeopleSearchingActive = true;
+        this.clearSuggestions();
       },
       async activePeopleSearchingFor(target) {
         this.peopleSearchingTarget = target;
@@ -224,7 +248,9 @@
         this.searchingText = "";
       },
       async getRelationHistory() {
-        const response = await axios.get(`/api/v1/users/${this.reporter.id}/relationships/`);
+        const response = await axios.get(
+          `/api/v1/users/${this.reporter.id}/relationships/`
+        );
 
         return response;
       },
