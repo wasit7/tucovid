@@ -190,7 +190,7 @@
       :class="{ 'is-modal-active': isPeopleSearchingActive }">
         <div class="card remove-min-width medium-padding" @click.stop>
           <label for="people_searching" class="label"
-            >ค้นหาบุคคล (กรุณาเลือกฟิลด์ที่ต้องการใส่ข้อมูลก่อน)</label
+            >ค้นหาบุคคล ${ isPeopleSearchingActive || peopleSearchingTarget ? "": "(กรุณาเลือกฟิลด์ที่ต้องการใส่ข้อมูลก่อน)" }</label
           >
           <input
             type="text"
@@ -199,7 +199,7 @@
             name="people_searching"
             placeholder="ค้นหาบุคคล"
             v-model="searchingText"
-            :disabled="!isPeopleSearchingActive"
+            :disabled="isPeopleSearchingActive && peopleSearchingTarget"
           />
           <div
             class="suggestions margin-top"
@@ -311,6 +311,7 @@
         searchingText: "",
         suggestions: [],
         isSuggestionDelay: false,
+        peopleSearchingTarget: null,
         isPeopleSearchingActive: false,
         eventHistory: []
       };
