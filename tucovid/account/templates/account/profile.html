@@ -47,15 +47,16 @@
           {% if profile %}value="{{ profile.phone_no }}"{% endif %}
         />
       </div>
-
-      <div class="submit-button-group">
-        <button class="button is-primary" type="submit">
-          บันทึกการเปลี่ยนแปลง
-        </button>
-        <button class="button is-cancel" type="reset">
-          ยกเลิก
-        </button>
-      </div>
+      {% if request.user.pk == profile.user.pk or request.user.is_staff %}
+        <div class="submit-button-group">
+          <button class="button is-primary" type="submit">
+            บันทึกการเปลี่ยนแปลง
+          </button>
+          <button class="button is-cancel" type="reset">
+            ยกเลิก
+          </button>
+        </div>
+      {% endif %}
     </form>
   </div>
 </div>
