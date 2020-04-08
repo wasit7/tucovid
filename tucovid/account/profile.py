@@ -40,7 +40,8 @@ def update_profile(profile, new_data):
 def search_profile(keyword):
     profiles = Profile.objects.filter(
         Q(full_name__icontains=keyword) |
-        Q(phone_no__icontains=keyword)
+        Q(phone_no__icontains=keyword) |
+        Q(extra_attribute__nickname__icontains=keyword)
     )
 
     return profiles
