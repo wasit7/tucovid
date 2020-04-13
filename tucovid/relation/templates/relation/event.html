@@ -333,7 +333,7 @@
             `${this.event.finish.date} ${this.event.finish.time}`
           );
 
-          if (startDate.getTime() >= finishDate.getTime()) {
+          if (startDate.getTime() < finishDate.getTime()) {
             isTimeCorrent = true;
           }
         }
