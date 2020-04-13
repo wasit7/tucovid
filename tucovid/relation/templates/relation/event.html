@@ -95,7 +95,12 @@
               สถานที่
             </p>
             <div class="map-control">
-              <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+              <input
+                id="pac-input"
+                class="controls"
+                type="text"
+                placeholder="Search Box"
+              />
               <div id="map"></div>
             </div>
           </div>
@@ -139,7 +144,10 @@
           </button>
         </div>
 
-        <div class="history margin-top margin-small-bottom" v-if="eventHistory.length">
+        <div
+          class="history margin-top margin-small-bottom"
+          v-if="eventHistory.length"
+        >
           <div class="title-block">
             <p class="remove-margin">
               รายการกิจกรรมที่เกี่ยวข้องของ ${ reporter.name }
@@ -250,11 +258,11 @@
 
   Vue.config.productionTip = false;
 
-  const paddingTo2Digits = number => {
+  const paddingTo2Digits = (number) => {
     return number < 10 ? `0${number}` : number;
   };
 
-  const getMonthInThai = monthNo => {
+  const getMonthInThai = (monthNo) => {
     switch (monthNo) {
       case 0:
         return "มกราคม";
@@ -290,27 +298,27 @@
       return {
         reporter: {
           id: null,
-          name: null
+          name: null,
         },
         event: {
           name: null,
           start: {
             date: null,
-            time: null
+            time: null,
           },
           finish: {
             date: null,
-            time: null
+            time: null,
           },
           location: null,
-          participants: []
+          participants: [],
         },
         searchingText: "",
         suggestions: [],
         isSuggestionDelay: false,
         peopleSearchingTarget: null,
         isPeopleSearchingActive: false,
-        eventHistory: []
+        eventHistory: [],
       };
     },
     created() {
@@ -353,9 +361,9 @@
         const existsProfile = [...this.event.participants];
         existsProfile.push(this.reporter);
         return existsProfile
-          .map(profile => profile.id)
-          .filter(profile => profile);
-      }
+          .map((profile) => profile.id)
+          .filter((profile) => profile);
+      },
     },
     methods: {
       initReporter() {
@@ -380,7 +388,7 @@
       async searchPeople(keyword) {
         const response = await axios.post("/api/v1/users/event/search/", {
           keyword,
-          excluding_ids: this.excludingProfile
+          excluding_ids: this.excludingProfile,
         });
 
         return response;
@@ -394,7 +402,7 @@
         if (Array.isArray(this.peopleSearchingTarget)) {
           this.peopleSearchingTarget.push({
             id,
-            name: full_name
+            name: full_name,
           });
         } else {
           this.peopleSearchingTarget.id = id;
@@ -414,7 +422,7 @@
       },
       deleteParticipant({ id }) {
         this.event.participants = this.event.participants.filter(
-          participant => participant.id !== id
+          (participant) => participant.id !== id
         );
       },
       async getEventHistory() {
@@ -428,12 +436,12 @@
         const response = await axios.post("", {
           reporter_id: this.reporter.id,
           participants: this.event.participants.map(
-            participant => participant.id
+            (participant) => participant.id
           ),
           title: this.event.name,
           start: `${this.event.start.date} ${this.event.start.time}`,
           finish: `${this.event.finish.date} ${this.event.finish.time}`,
-          location: this.event.location
+          location: this.event.location,
         });
 
         return response;
@@ -450,14 +458,14 @@
           name: null,
           start: {
             date: null,
-            time: null
+            time: null,
           },
           finish: {
             date: null,
-            time: null
+            time: null,
           },
           location: null,
-          participants: []
+          participants: [],
         };
       },
       closePeopleSearchingModal() {
@@ -476,7 +484,7 @@
         }
 
         return target;
-      }
+      },
     },
     watch: {
       searchingText(value) {
@@ -505,7 +513,7 @@
           return null;
         }
         this.event.start.date = this.setMinDate(this.event.start.date, value);
-      }
+      },
     },
     filters: {
       translateMonth(value) {
@@ -515,8 +523,8 @@
         return `${date.getDate()} ${month} ${date.getFullYear()} ${paddingTo2Digits(
           date.getHours()
         )}:${paddingTo2Digits(date.getMinutes())}`;
-      }
-    }
+      },
+    },
   });
 </script>
 <!-- for render datetime-picker and textare -->
@@ -529,7 +537,7 @@
     dateFormat: "H:i",
     time_24hr: true,
     defaultHour: new Date().getHours(),
-    defaultMinute: new Date().getMinutes()
+    defaultMinute: new Date().getMinutes(),
   };
 
   const finishDate = flatpickr("#finish-date");
@@ -537,7 +545,7 @@
   const startDate = flatpickr("#start-date", {
     onChange(dates, dateStr, instance) {
       finishDate.config.minDate = dateStr;
-    }
+    },
   });
   const finishTime = flatpickr("#finish-time", {
     ...flatTimePickerConfig,
@@ -553,7 +561,7 @@
           instance.config.minTime = start.time;
         }
       }
-    }
+    },
   });
 </script>
 <!-- for render map -->
@@ -573,16 +581,32 @@
     map = new google.maps.Map(mapElement, {
       zoom: 8,
       center: BKK_LAT_LONG,
-      gestureHandling: 'greedy',
-      mapTypeControl: false
+      gestureHandling: "greedy",
+      mapTypeControl: false,
     });
-    
+
     const input = document.querySelector("#pac-input");
     const searchBox = new google.maps.places.SearchBox(input);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-    map.addListener("click", e => {
+    map.addListener("click", (e) => {
       placeMarkerAndPanTo(e.latLng, map);
+    });
+
+    searchBox.addListener("places_changed", () => {
+      const places = searchBox.getPlaces();
+
+      if (places.length == 0) {
+        return;
+      }
+
+      const place = places[0];
+
+      if (!plcae.geometry) {
+        return;
+      }
+
+      placeMarkerAndPanTo(place.geometry.location, map);
     });
   }
 
@@ -593,7 +617,7 @@
 
     marker = new google.maps.Marker({
       position: latLng,
-      map: map
+      map: map,
     });
     map.panTo(latLng);
     app.event.location = latLng;
