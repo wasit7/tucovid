@@ -41,7 +41,7 @@ def profile_page_by_id(request, user_id):
         if request.method == 'POST' and request.user.is_staff:
                 profile = update_profile(profile, request.POST)
 
-        return render(request, 'account/profile.html', context=context)
+        return render(request, 'account/other_profile.html', context=context)
 
     except:
         return redirect('relation:index')
