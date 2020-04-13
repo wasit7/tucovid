@@ -185,6 +185,25 @@ body {
   padding: 1.5rem;
 }
 
-#map {
+.map-control, #map {
   height: 350px;
+}
+
+#pac-input {
+  background-color: #fff;
+  margin: 10px;
+  padding: 0.25rem;
+  text-overflow: ellipsis;
+  border-radius: 4px;
+  border: 1px solid #dbdbdb;
+  width: 250px;
+}
+
+#pac-input:hover {
+  border: 1px solid #bdbdbd;
+}
+
+#pac-input:focus {
+  border: 1px solid #3273dc;
+  box-shadow: 0 0 0 0.125rem rgba(50, 115, 220, 0.25);
 }

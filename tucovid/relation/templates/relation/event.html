@@ -94,7 +94,10 @@
             <p class="remove-margin">
               สถานที่
             </p>
-            <div id="map"></div>
+            <div class="map-control">
+              <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+              <div id="map"></div>
+            </div>
           </div>
 
           <div class="inline-field">
@@ -555,7 +558,7 @@
 </script>
 <!-- for render map -->
 <script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzoMKiIjuIA4H3Ld1HoeNCbV7LYeMYeDY&callback=initMap"
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBzoMKiIjuIA4H3Ld1HoeNCbV7LYeMYeDY&libraries=places&callback=initMap"
   async
   defer
 ></script>
@@ -570,8 +573,13 @@
     map = new google.maps.Map(mapElement, {
       zoom: 8,
       center: BKK_LAT_LONG,
-      gestureHandling: 'greedy'
+      gestureHandling: 'greedy',
+      mapTypeControl: false
     });
+    
+    const input = document.querySelector("#pac-input");
+    const searchBox = new google.maps.places.SearchBox(input);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
     map.addListener("click", e => {
       placeMarkerAndPanTo(e.latLng, map);
