@@ -35,7 +35,7 @@ class RelationProfileSearchAPI(APIView):
 
         profiles = [
             profile
-            for profile in profiles.exclude(user__pk=reporter_id).exclude(full_name='')
+            for profile in profiles.exclude(user__pk=reporter_id).exclude(full_name='')[:100]
             if not Relationship.objects \
                 .filter(persons__pk=reporter_id) \
                 .filter(persons__pk=profile.user.pk) \
@@ -48,7 +48,7 @@ class RelationProfileSearchAPI(APIView):
                 'full_name': profile.full_name,
                 'phone_no': profile.phone_no,
                 'extra_attribute': profile.extra_attribute
-            } for profile in profiles
+            } for profile in profiles[:10]
         ])
 
 class EventProfileSearchAPI(APIView):
@@ -72,5 +72,5 @@ class EventProfileSearchAPI(APIView):
                 'full_name': profile.full_name,
                 'phone_no': profile.phone_no,
                 'extra_attribute': profile.extra_attribute
-            } for profile in profiles.exclude(user__pk__in=excluding_ids).exclude(full_name='')
+            } for profile in profiles.exclude(user__pk__in=excluding_ids).exclude(full_name='')[:10]
         ])
