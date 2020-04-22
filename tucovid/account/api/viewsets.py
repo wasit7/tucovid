@@ -14,7 +14,7 @@ class UserViewSet(
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet
 ):
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by('pk')
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
