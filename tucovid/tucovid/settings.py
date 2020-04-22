@@ -71,6 +71,11 @@ SOCIAL_AUTH_PIPELINE = [
     'social_core.pipeline.social_auth.associate_by_email',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100
+}
+
 ROOT_URLCONF = 'tucovid.urls'
 
 TEMPLATES = [

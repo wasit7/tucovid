@@ -297,7 +297,7 @@
         if (value) {
           const response = await this.getRelationHistory();
           const { data } = response;
-          this.relationHistory = data;
+          this.relationHistory = data.results;
           this.storeReporterInLocalStorage();
         }
       }
