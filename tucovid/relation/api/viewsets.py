@@ -16,7 +16,7 @@ class RelationshipViewSet(
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet
 ):
-    queryset = Relationship.objects.all()
+    queryset = Relationship.objects.all().order_by('-pk')
     serializer_class = RelationshipSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
@@ -25,7 +25,7 @@ class EventViewSet(
     mixins.RetrieveModelMixin,
     viewsets.GenericViewSet
 ):
-    queryset = Event.objects.all()
+    queryset = Event.objects.all().order_by('-pk')
     serializer_class = EventSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 

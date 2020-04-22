@@ -103,13 +103,13 @@
             :disabled="!isPeopleSearchingActive"
           />
           <div
-            class="suggestions margin-top"
+            class="suggestions margin-small-top"
             v-if="isSuggestionDelay"
           >
             <p class="helper remove-margin">กำลังค้นหา</p>
           </div>
           <div
-            class="suggestions margin-top"
+            class="suggestions margin-small-top"
             v-if="!isSuggestionDelay"
           >
             <div v-if="!suggestions.length">
@@ -117,14 +117,14 @@
             </div>
             <div
               v-else
-              class="suggestion margin-top"
+              class="suggestion margin-small-top"
               v-for="suggestion in suggestions"
               :key="suggestion.id"
               @click="selectSuggestion(suggestion)"
             >
               <h4 class="suggestion-title">${ suggestion.full_name }</h4>
               <span class="phone-no">
-                ${ suggestion.phone_no }
+                ${ suggestion.phone_no == '-' ? '' : suggestion.phone_no }
                 <a
                   @click.stop
                   :href="`/account/profile/${ suggestion.id }`"
@@ -297,7 +297,7 @@
         if (value) {
           const response = await this.getRelationHistory();
           const { data } = response;
-          this.relationHistory = data;
+          this.relationHistory = data.results;
           this.storeReporterInLocalStorage();
         }
       }
