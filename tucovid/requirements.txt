@@ -10,10 +10,13 @@ django-tuauth==0.1
 djangorestframework==3.11.0
 idna==2.9
 Markdown==3.2.1
+numpy==1.18.3
 oauthlib==3.1.0
+pandas==1.0.3
 psycopg2-binary==2.8.4
 pycparser==2.20
 PyJWT==1.7.1
+python-dateutil==2.8.1
 python3-openid==3.1.0
 pytz==2019.3
 requests==2.23.0
@@ -24,3 +27,4 @@ social-auth-core==3.3.0
 sqlparse==0.3.1
 Unidecode==1.1.1
 urllib3==1.25.8
+xlrd==1.2.0
