@@ -216,11 +216,11 @@
             class="suggestions margin-small-top"
             v-if="!isSuggestionDelay && isPeopleSearchingActive"
           >
-            <div v-if="!suggestions.length">
+            <div v-if="!suggestions.length && isSuggestionDelay">
               <p class="remove-margin">ไม่พบบุคคลที่ใกล้เคียง</p>
             </div>
             <div
-              v-else
+              v-else-if="suggestions.length"
               class="suggestion margin-small-top"
               v-for="suggestion in suggestions"
               :key="suggestion.id"
