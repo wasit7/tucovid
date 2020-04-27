@@ -42,6 +42,6 @@ def search_profile(keyword):
         Q(full_name__icontains=keyword) |
         Q(phone_no__icontains=keyword) |
         Q(extra_attribute__nickname__icontains=keyword)
-    )
+    ).order_by('-pk')
 
     return profiles
